@@ -4,7 +4,7 @@
   "info": {
     "singularName": "projet",
     "pluralName": "projets",
-    "displayName": "Projets"
+    "displayName": "Projet"
   },
   "options": {
     "draftAndPublish": true
@@ -21,19 +21,13 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": [
-        "E-commerce Portfolio Institutionnel Blog"
-      ]
+      "enum": ["E-commerce", "Portfolio", "Institutionnel", "Blog"],
+      "required": true
     },
     "image": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
       "type": "media",
-      "multiple": true
+      "multiple": false,
+      "required": true
     }
   }
 }

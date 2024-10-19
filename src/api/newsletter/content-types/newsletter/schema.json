@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "newletters",
+  "collectionName": "newsletters",
   "info": {
-    "singularName": "newletter",
-    "pluralName": "newletters",
-    "displayName": "Newletter"
+    "singularName": "newsletter",
+    "pluralName": "newsletters",
+    "displayName": "Newsletter"
   },
   "options": {
     "draftAndPublish": true

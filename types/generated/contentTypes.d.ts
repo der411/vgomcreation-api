@@ -527,12 +527,12 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiNewletterNewletter extends Struct.CollectionTypeSchema {
-  collectionName: 'newletters';
+export interface ApiNewsletterNewsletter extends Struct.CollectionTypeSchema {
+  collectionName: 'newsletters';
   info: {
-    singularName: 'newletter';
-    pluralName: 'newletters';
-    displayName: 'Newletter';
+    singularName: 'newsletter';
+    pluralName: 'newsletters';
+    displayName: 'Newsletter';
   };
   options: {
     draftAndPublish: true;
@@ -549,7 +549,7 @@ export interface ApiNewletterNewletter extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::newletter.newletter'
+      'api::newsletter.newsletter'
     > &
       Schema.Attribute.Private;
   };
@@ -560,7 +560,7 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
   info: {
     singularName: 'projet';
     pluralName: 'projets';
-    displayName: 'Projets';
+    displayName: 'Projet';
   };
   options: {
     draftAndPublish: true;
@@ -569,12 +569,10 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<
-      ['E-commerce Portfolio Institutionnel Blog']
-    >;
-    image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
+      ['E-commerce', 'Portfolio', 'Institutionnel', 'Blog']
+    > &
+      Schema.Attribute.Required;
+    image: Schema.Attribute.Media & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1008,7 +1006,7 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::contact.contact': ApiContactContact;
-      'api::newletter.newletter': ApiNewletterNewletter;
+      'api::newsletter.newsletter': ApiNewsletterNewsletter;
       'api::projet.projet': ApiProjetProjet;
       'api::temoignage.temoignage': ApiTemoignageTemoignage;
       'admin::permission': AdminPermission;
