@@ -13,7 +13,7 @@ module.exports = ({ env }) => [
                 },
             },
             cors: {
-                origin: ['http://localhost:3000'], // Autorise les requêtes de localhost:3000
+                origin: ['http://localhost:3000', 'https://vgomcreation-fullstack.vercel.app'],
                 methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
                 headers: ['Content-Type', 'Authorization'],
             },
