@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "commentaires",
+  "info": {
+    "singularName": "commentaire",
+    "pluralName": "commentaires",
+    "displayName": "Commentaire",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "auteur": {
+      "type": "string",
+      "required": true
+    },
+    "contenu": {
+      "type": "text",
+      "required": true
+    },
+    "date": {
+      "type": "datetime"
+    },
+    "blog": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::blog.blog",
+      "inversedBy": "commentaires"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "projet",
     "pluralName": "projets",
-    "displayName": "Projet"
+    "displayName": "Projets",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,12 +20,17 @@
       "type": "text",
       "required": true
     },
-    "type": {
-      "type": "enumeration",
-      "enum": ["E-commerce", "Portfolio", "Institutionnel", "Blog"],
-      "required": true
+    "url_projet": {
+      "type": "string",
+      "unique": true
     },
     "image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
       "type": "media",
       "multiple": false,
       "required": true
