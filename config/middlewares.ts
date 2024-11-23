@@ -21,6 +21,7 @@ module.exports = ({ env }) => [
         origin: [
           'http://localhost:3000', // Frontend local
           'https://vgomcreation-fullstack.vercel.app', // Frontend déployé
+          'https://vgomcreation-api-production.up.railway.app', // Backend déployé
         ],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         headers: ['Content-Type', 'Authorization'],
