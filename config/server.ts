@@ -5,4 +5,7 @@ module.exports = ({ env }) => ({
     keys: env.array('APP_KEYS'),
   },
   url: env('URL', 'https://vgomcreation-api-production.up.railway.app'),
+  admin: {
+    url: '/admin',  // Ajoutez ceci
+  }
 });
