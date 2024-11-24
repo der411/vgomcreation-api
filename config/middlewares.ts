@@ -17,8 +17,10 @@ module.exports = ({ env }) => [
   {
       name: 'strapi::cors',
       config: {
-          enabled: true,
-          origin: ['*'
+          origin: [
+              'http://localhost:3000', // Frontend local
+              'https://vgomcreation-fullstack.vercel.app', // Frontend déployé
+              'https://vgomcreation-api-production.up.railway.app', // Backend déployé
           ],
           methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
           headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
