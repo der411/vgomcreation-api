@@ -9,12 +9,7 @@ module.exports = [
         credentials: true, // Permet les cookies/headers d'authentification
       },
     },
-    {
-      name: 'strapi::redirect',
-      config: {
-        https: true, // Force la redirection HTTPS
-      },
-    },
+    
     'strapi::poweredBy',
     'strapi::logger',
     'strapi::query',
