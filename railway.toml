@@ -1,0 +1,7 @@
+[[services]]
+name = "strapi"
+http_origin = "*"
+[services.ports]
+http = "1337"
+[services.environment]
+NODE_ENV = "production"
