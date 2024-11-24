@@ -4,5 +4,5 @@ module.exports = ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
-  url: env('PUBLIC_URL', 'https://vgomcreation-api-production.up.railway.app'),
+  url: env('URL', 'https://vgomcreation-api-production.up.railway.app'),
 });
