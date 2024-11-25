@@ -12,7 +12,7 @@ module.exports = ({ env }) => ({
   },
   settings: {
     cors: {
-      origin: ['https://www.vgomcreation.com', 'https://vgomcreation.com'],
+      origin: ['https://www.vgomcreation.fr', 'https://vgomcreation.fr'],
     },
   },
 });

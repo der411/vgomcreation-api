@@ -4,7 +4,7 @@ module.exports = [
     {
       name: 'strapi::cors',
       config: {
-        origin: ['https://www.vgomcreation.com', 'https://vgomcreation.com'],
+        origin: ['https://www.vgomcreation.fr', 'https://vgomcreation.fr'],
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
         headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
         credentials: true, // Permet les cookies/headers d'authentification
