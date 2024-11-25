@@ -12,7 +12,7 @@ module.exports = ({ env }) => ({
   },
   settings: {
     cors: {
-      origin: ['https://vgomcreation-fullstack.vercel.app'],
+      origin: ['https://www.vgomcreation.com'],
     },
   },
 });
