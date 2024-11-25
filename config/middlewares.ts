@@ -4,7 +4,7 @@ module.exports = [
     {
       name: 'strapi::cors',
       config: {
-        origin: ['https://vgomcreation-fullstack.vercel.app', 'https://vgomcreation-api-production.up.railway.app'],
+        origin: ['https://vgomcreation-fullstack.vercel.app'],
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
         headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
         credentials: true, // Permet les cookies/headers d'authentification
