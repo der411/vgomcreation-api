@@ -25,9 +25,7 @@ module.exports = ({ env }) => [
       config: {
           enabled: true,
           origin: [
-              'http://localhost:3000',
-              'https://vgomcreation-fullstack.vercel.app',
-              'https://vgomcreation-api-production.up.railway.app'
+              'https://www.vgomcreation.fr', 'https://vgomcreation.fr'
           ],
           methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
           headers: [
