@@ -1,15 +1,10 @@
 module.exports = ({ env }) => ({
     upload: {
-      config: {
-        provider: 'local',
-        providerOptions: {
-          sizeLimit: 10000000, // Limite de taille en octets (10 Mo ici)
-        },
-        actionOptions: {
-          upload: {
-            path: env('UPLOAD_PATH', '/data/uploads'),
-          },
-        },
+      provider: 'cloudinary',
+      providerOptions: {
+        cloud_name: env('CLOUDINARY_NAME'),
+        api_key: env('CLOUDINARY_KEY'),
+        api_secret: env('CLOUDINARY_SECRET'),
       },
     },
   });
