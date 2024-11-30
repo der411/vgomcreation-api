@@ -1,225 +1,5 @@
 import type { Struct, Schema } from '@strapi/strapi';
 
-export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
-  collectionName: 'blogs';
-  info: {
-    singularName: 'blog';
-    pluralName: 'blogs';
-    displayName: 'Blog';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    titre: Schema.Attribute.String & Schema.Attribute.Required;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
-    contenu: Schema.Attribute.RichText & Schema.Attribute.Required;
-    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
-      Schema.Attribute.Required;
-    temps_lecture: Schema.Attribute.Integer &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<1>;
-    auteur: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'vgomcreation'>;
-    vue_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    commentaire_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    likes_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    commentaires: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::commentaire.commentaire'
-    >;
-    likes_users: Schema.Attribute.Relation<
-      'manyToMany',
-      'plugin::users-permissions.user'
-    >;
-    viewedBy: Schema.Attribute.Relation<
-      'manyToMany',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiCommentaireCommentaire extends Struct.CollectionTypeSchema {
-  collectionName: 'commentaires';
-  info: {
-    singularName: 'commentaire';
-    pluralName: 'commentaires';
-    displayName: 'Commentaire';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    auteur: Schema.Attribute.String & Schema.Attribute.Required;
-    contenu: Schema.Attribute.Text & Schema.Attribute.Required;
-    date: Schema.Attribute.DateTime;
-    blog: Schema.Attribute.Relation<'manyToOne', 'api::blog.blog'>;
-    users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::commentaire.commentaire'
-    > &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiContactContact extends Struct.CollectionTypeSchema {
-  collectionName: 'contacts';
-  info: {
-    singularName: 'contact';
-    pluralName: 'contacts';
-    displayName: 'Contact';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    prenom: Schema.Attribute.String & Schema.Attribute.Required;
-    nom: Schema.Attribute.String & Schema.Attribute.Required;
-    email: Schema.Attribute.Email;
-    message: Schema.Attribute.Text & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::contact.contact'
-    > &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiNewletterNewletter extends Struct.CollectionTypeSchema {
-  collectionName: 'newletters';
-  info: {
-    singularName: 'newletter';
-    pluralName: 'newletters';
-    displayName: 'Newletter';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    email: Schema.Attribute.Email & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::newletter.newletter'
-    > &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
-  collectionName: 'projets';
-  info: {
-    singularName: 'projet';
-    pluralName: 'projets';
-    displayName: 'Projets';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    titre: Schema.Attribute.String & Schema.Attribute.Required;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
-    url_projet: Schema.Attribute.String & Schema.Attribute.Unique;
-    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
-      Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::projet.projet'
-    > &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiTemoignageTemoignage extends Struct.CollectionTypeSchema {
-  collectionName: 'temoignages';
-  info: {
-    singularName: 'temoignage';
-    pluralName: 'temoignages';
-    displayName: 'T\u00E9moignages';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    nom_du_client: Schema.Attribute.String & Schema.Attribute.Required;
-    contenu_du_temoignage: Schema.Attribute.Text & Schema.Attribute.Required;
-    note: Schema.Attribute.Integer & Schema.Attribute.Required;
-    Photo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::temoignage.temoignage'
-    > &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: 'files';
   info: {
@@ -720,6 +500,230 @@ export interface PluginUsersPermissionsUser
   };
 }
 
+export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
+  collectionName: 'blogs';
+  info: {
+    singularName: 'blog';
+    pluralName: 'blogs';
+    displayName: 'Blog';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    contenu: Schema.Attribute.RichText & Schema.Attribute.Required;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
+      Schema.Attribute.Required;
+    temps_lecture: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    auteur: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'vgomcreation'>;
+    vue_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    commentaire_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    likes_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    commentaires: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::commentaire.commentaire'
+    >;
+    likes_users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    viewedBy: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCommentaireCommentaire extends Struct.CollectionTypeSchema {
+  collectionName: 'commentaires';
+  info: {
+    singularName: 'commentaire';
+    pluralName: 'commentaires';
+    displayName: 'Commentaire';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    auteur: Schema.Attribute.String & Schema.Attribute.Required;
+    contenu: Schema.Attribute.Text & Schema.Attribute.Required;
+    date: Schema.Attribute.DateTime;
+    blog: Schema.Attribute.Relation<'manyToOne', 'api::blog.blog'>;
+    users_permissions_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::commentaire.commentaire'
+    > &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiContactContact extends Struct.CollectionTypeSchema {
+  collectionName: 'contacts';
+  info: {
+    singularName: 'contact';
+    pluralName: 'contacts';
+    displayName: 'Contact';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    prenom: Schema.Attribute.String & Schema.Attribute.Required;
+    nom: Schema.Attribute.String & Schema.Attribute.Required;
+    email: Schema.Attribute.Email;
+    message: Schema.Attribute.Text & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact.contact'
+    > &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNewletterNewletter extends Struct.CollectionTypeSchema {
+  collectionName: 'newletters';
+  info: {
+    singularName: 'newletter';
+    pluralName: 'newletters';
+    displayName: 'Newletter';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::newletter.newletter'
+    > &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
+  collectionName: 'projets';
+  info: {
+    singularName: 'projet';
+    pluralName: 'projets';
+    displayName: 'Projets';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    url_projet: Schema.Attribute.String & Schema.Attribute.Unique;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
+      Schema.Attribute.Required;
+    vendable: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::projet.projet'
+    > &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTemoignageTemoignage extends Struct.CollectionTypeSchema {
+  collectionName: 'temoignages';
+  info: {
+    singularName: 'temoignage';
+    pluralName: 'temoignages';
+    displayName: 'T\u00E9moignages';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    nom_du_client: Schema.Attribute.String & Schema.Attribute.Required;
+    contenu_du_temoignage: Schema.Attribute.Text & Schema.Attribute.Required;
+    note: Schema.Attribute.Integer & Schema.Attribute.Required;
+    Photo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::temoignage.temoignage'
+    > &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: 'admin_permissions';
   info: {
@@ -1092,12 +1096,6 @@ export interface AdminTransferTokenPermission
 declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
-      'api::blog.blog': ApiBlogBlog;
-      'api::commentaire.commentaire': ApiCommentaireCommentaire;
-      'api::contact.contact': ApiContactContact;
-      'api::newletter.newletter': ApiNewletterNewletter;
-      'api::projet.projet': ApiProjetProjet;
-      'api::temoignage.temoignage': ApiTemoignageTemoignage;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
@@ -1108,6 +1106,12 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::blog.blog': ApiBlogBlog;
+      'api::commentaire.commentaire': ApiCommentaireCommentaire;
+      'api::contact.contact': ApiContactContact;
+      'api::newletter.newletter': ApiNewletterNewletter;
+      'api::projet.projet': ApiProjetProjet;
+      'api::temoignage.temoignage': ApiTemoignageTemoignage;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;
       'admin::role': AdminRole;
