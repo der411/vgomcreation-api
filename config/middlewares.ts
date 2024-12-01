@@ -23,7 +23,6 @@ module.exports = ({ env }) => [
   {
       name: 'strapi::cors',
       config: {
-          enabled: true,
           origin: [
               'https://www.vgomcreation.fr', 'https://vgomcreation.fr'
           ],
