@@ -12,7 +12,7 @@ module.exports = ({ env }) => ({
   },
   settings: {
     cors: {
-      origin: ['https://www.vgomcreation.fr', 'https://vgomcreation.fr', 'http://localhost:3000'], // Définir les origines autorisées pour le CORS
+      origin: ['https://www.vgomcreation.fr', 'https://vgomcreation.fr', 'http://localhost:3000'], // Origines autorisées pour le CORS
     },
     public: {
       path: './public', // Répertoire pour servir les fichiers publics

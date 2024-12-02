@@ -44,6 +44,10 @@
       "type": "decimal",
       "default": 0,
       "required": false
+    },
+    "paymentLink": {
+      "type": "string",
+      "required": true
     }
   }
 }

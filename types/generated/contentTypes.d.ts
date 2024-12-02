@@ -674,6 +674,7 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    paymentLink: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
