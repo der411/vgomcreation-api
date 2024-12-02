@@ -29,7 +29,6 @@
     "strapi-provider-email-resend": "^1.0.4",
     "strapi-provider-email-sendinblue": "^4.0.0",
     "strapi-utils": "^3.6.11",
-    "stripe": "^17.4.0",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
