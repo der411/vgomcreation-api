@@ -24,7 +24,7 @@ module.exports = ({ env }) => [
       name: 'strapi::cors',
       config: {
           origin: [
-              'https://www.vgomcreation.fr', 'https://vgomcreation.fr'
+              'https://www.vgomcreation.fr', 'https://vgomcreation.fr, http://localhost:3000'
           ],
           methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
           headers: [
