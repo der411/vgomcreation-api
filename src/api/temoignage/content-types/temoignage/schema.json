@@ -4,7 +4,8 @@
   "info": {
     "singularName": "temoignage",
     "pluralName": "temoignages",
-    "displayName": "Témoignages"
+    "displayName": "Témoignages",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -22,16 +23,6 @@
     "note": {
       "type": "integer",
       "required": true
-    },
-    "Photo": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
-      "type": "media",
-      "multiple": true
     }
   }
 }

@@ -697,6 +697,7 @@ export interface ApiTemoignageTemoignage extends Struct.CollectionTypeSchema {
     singularName: 'temoignage';
     pluralName: 'temoignages';
     displayName: 'T\u00E9moignages';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -705,10 +706,6 @@ export interface ApiTemoignageTemoignage extends Struct.CollectionTypeSchema {
     nom_du_client: Schema.Attribute.String & Schema.Attribute.Required;
     contenu_du_temoignage: Schema.Attribute.Text & Schema.Attribute.Required;
     note: Schema.Attribute.Integer & Schema.Attribute.Required;
-    Photo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
