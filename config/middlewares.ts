@@ -55,7 +55,7 @@ module.exports = ({ env }) => [
   },
     {
         name: 'global::check-cookie-consent', // Déclaration du middleware personnalisé
-        resolve: './src/middlewares/checkCookieConsent', // Chemin vers le middleware
+        resolve: './src/middlewares/check-cookie-consent', // Chemin vers le middleware
     },
   'strapi::poweredBy',
   'strapi::logger',
