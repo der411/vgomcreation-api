@@ -53,6 +53,10 @@ module.exports = ({ env }) => [
           sameSite: 'strict', // Politique d'accès stricte aux cookies
       },
   },
+    {
+        name: 'global::check-cookie-consent', // Déclaration du middleware personnalisé
+        resolve: './src/middlewares/checkCookieConsent', // Chemin vers le middleware
+    },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
