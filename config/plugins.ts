@@ -14,4 +14,17 @@ export default ({ env }) => ({
             },
         },
     },
+    email: {
+        config: {
+            provider: 'mailgun',
+            providerOptions: {
+                apiKey: env('MAILGUN_API_KEY'),
+                domain: env('MAILGUN_DOMAIN'),
+            },
+            settings: {
+                defaultFrom: 'no-reply@mg.vgomcreation.com',
+                defaultReplyTo: 'no-reply@mg.vgomcreation.com',
+            },
+        },
+    },
 });
