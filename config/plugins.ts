@@ -20,11 +20,11 @@ export default ({ env }) => ({
             providerOptions: {
                 apiKey: env('MAILGUN_API_KEY'),
                 domain: env('MAILGUN_DOMAIN'),
-                baseUrl: env('MAILGUN_BASE_URL'),
+                baseUrl: env('MAILGUN_BASE_URL', 'https://api.mailgun.net'),
             },
             settings: {
-                defaultFrom: 'no-reply@mg.vgomcreation.com',
-                defaultReplyTo: 'no-reply@mg.vgomcreation.com',
+                defaultFrom: 'no-reply@mg.vgomcreation.fr',
+                defaultReplyTo: 'no-reply@mg.vgomcreation.fr',
             },
         },
     },
