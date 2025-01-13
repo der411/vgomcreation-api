@@ -31,12 +31,14 @@
     "strapi-provider-email-resend": "^1.0.4",
     "strapi-provider-email-sendinblue": "^4.0.0",
     "strapi-utils": "^3.6.11",
+    "stripe": "^17.5.0",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/stripe": "^8.0.416",
     "typescript": "^5"
   },
   "engines": {

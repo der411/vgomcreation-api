@@ -12,12 +12,6 @@ module.exports = ({ env }) => [
                   upgradeInsecureRequests: null,
               },
           },
-          cookie: {
-              httpOnly: true, // Empêche l'accès aux cookies via JavaScript
-              secure: env.bool('NODE_ENV', 'development') === 'production', // Utilise HTTPS uniquement en production
-              sameSite: 'lax', // Cookies accessibles dans le même site
-              maxAge: 1000 * 60 * 60 * 24 * 7, // 7 jours
-          },
       },
   },
   {
@@ -38,29 +32,23 @@ module.exports = ({ env }) => [
           maxAge: 3600
       },
   },
-  {
-      name: 'strapi::session',
-      config: {
-          key: 'koa.sess', // Nom du cookie de session
-          maxAge: 24 * 60 * 60 * 1000, // 1 jour en millisecondes
-          autoCommit: true, // Active la validation automatique des en-têtes
-          overwrite: true, // Permet d'écraser les cookies
-          httpOnly: true, // Empêche l'accès via JavaScript
-          signed: true, // Signer le cookie pour éviter toute falsification
-          rolling: false, // Définit un nouveau cookie pour chaque requête
-          renew: false, // Renouvelle le cookie si la session expire bientôt
-          secure: env('NODE_ENV') === 'production', // Active HTTPS en production
-          sameSite: 'strict', // Politique d'accès stricte aux cookies
-      },
-  },
     {
-        name: 'global::check-cookie-consent', // Déclaration du middleware personnalisé
-        resolve: './src/middlewares/check-cookie-consent', // Chemin vers le middleware
+        name: 'strapi::raw-body',
+        config: {
+            enabled: true,
+            include: ['/api/webhook'], // Capture uniquement les données brutes pour cette route
+            type: 'application/json', // Type MIME attendu
+        },
+    },
+    {
+        name: 'strapi::body',
+        config: {
+            includeUnparsed: true, // Nécessaire pour inclure rawBody
+        },
     },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
-  'strapi::body',
   'strapi::favicon',
   'strapi::public',
 ]
