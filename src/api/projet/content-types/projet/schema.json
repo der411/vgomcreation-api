@@ -43,11 +43,16 @@
     "price": {
       "type": "decimal",
       "default": 0,
-      "required": false
-    },
-    "paymentLink": {
-      "type": "string",
       "required": true
+    },
+    "priceId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "sold": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

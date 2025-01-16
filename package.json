@@ -7,6 +7,7 @@
     "build": "npx strapi build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
+    "generate": "strapi generate",
     "start": "strapi start",
     "strapi": "strapi"
   },
@@ -35,6 +36,7 @@
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
+    "@strapi/types": "^5.7.0",
     "@types/node": "^20.17.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",

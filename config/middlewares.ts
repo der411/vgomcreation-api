@@ -32,23 +32,10 @@ module.exports = ({ env }) => [
           maxAge: 3600
       },
   },
-    {
-        name: 'strapi::raw-body',
-        config: {
-            enabled: true,
-            include: ['/api/webhook'], // Capture uniquement les données brutes pour cette route
-            type: 'application/json', // Type MIME attendu
-        },
-    },
-    {
-        name: 'strapi::body',
-        config: {
-            includeUnparsed: true, // Nécessaire pour inclure rawBody
-        },
-    },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
+  'strapi::body',
   'strapi::favicon',
   'strapi::public',
 ]
