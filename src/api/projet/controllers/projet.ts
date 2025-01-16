@@ -62,6 +62,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                 mode: 'payment',
                 success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.CLIENT_URL}/cancel`,
+                customer_email: ctx.request.body.email,
                 metadata: {
                     projetId: projetId
                 }
@@ -96,9 +97,15 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
             switch (event.type) {
                 case 'checkout.session.completed': {
                     const session = event.data.object;
+                    console.log(`Email du client : ${session.customer_email}`);
+                    console.log(`ID du projet : ${session.metadata.projetId}`);
                     console.log('💰 Paiement réussi:', {
                         sessionId: session.id,
                         amount: session.amount_total / 100
+                    });
+                    // Mettez à jour votre base de données ici
+                    await strapi.entityService.update('api::projet.projet', session.metadata.projetId, {
+                        data: { sold: true },
                     });
                     break;
                 }
