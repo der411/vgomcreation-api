@@ -62,7 +62,6 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                 mode: 'payment',
                 success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.CLIENT_URL}/cancel`,
-                customer_email: ctx.request.body.email,
                 metadata: {
                     projetId: projetId
                 }
