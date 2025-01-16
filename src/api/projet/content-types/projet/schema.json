@@ -43,11 +43,11 @@
     "price": {
       "type": "decimal",
       "default": 0,
-      "required": true
+      "required": false
     },
     "priceId": {
       "type": "string",
-      "required": true,
+      "required": false,
       "unique": true
     },
     "sold": {

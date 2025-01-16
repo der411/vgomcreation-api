@@ -546,12 +546,8 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
       'api::projet.projet'
     > &
       Schema.Attribute.Private;
-    price: Schema.Attribute.Decimal &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<0>;
-    priceId: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    priceId: Schema.Attribute.String & Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
     sold: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     titre: Schema.Attribute.String & Schema.Attribute.Required;

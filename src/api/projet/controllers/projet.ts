@@ -146,4 +146,24 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
             return ctx.internalServerError('Impossible de récupérer les détails de la session');
         }
     },
+
+    async create(ctx) {
+        const { vendable, price, priceId } = ctx.request.body.data;
+
+        if (vendable && (!price || !priceId)) {
+            return ctx.badRequest('Les champs "price" et "priceId" sont obligatoires lorsque le projet est vendable.');
+        }
+
+        return await super.create(ctx);
+    },
+
+    async update(ctx) {
+        const { vendable, price, priceId } = ctx.request.body.data;
+
+        if (vendable && (!price || !priceId)) {
+            return ctx.badRequest('Les champs "price" et "priceId" sont obligatoires lorsque le projet est vendable.');
+        }
+
+        return await super.update(ctx);
+    }
 }));
