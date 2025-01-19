@@ -102,8 +102,9 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
     // Ajout du handler webhook pour le développement
     async handleWebhook(ctx) {
         try {
+            console.log('🎯 Début du traitement webhook');
             const signature = ctx.request.headers['stripe-signature'];
-            console.log('🎯 Webhook reçu');
+            console.log('📝 Headers reçus:', ctx.request.headers);
             console.log('📝 Signature:', signature);
 
             // Désactiver le parsing automatique
@@ -137,19 +138,30 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                 console.log('📝 Début du corps brut:', rawBody.substring(0, 50));
             }
 
+            console.log('📦 RawBody complet reçu, taille:', rawBody.length);
+            console.log('📝 Début du corps brut:', rawBody.substring(0, 100));
+            console.log('🔑 Vérification webhook secret:', !!process.env.STRIPE_WEBHOOK_SECRET_LOCAL);
+
             const event = stripe.webhooks.constructEvent(
                 rawBody,
                 signature,
                 process.env.STRIPE_WEBHOOK_SECRET_LOCAL
             );
 
-            console.log('✅ Type d\'événement:', event.type);
+            console.log('✅ Événement Stripe construit avec succès');
+            console.log('📋 Type d\'événement:', event.type);
 
             // Le reste de votre code reste identique
             switch (event.type) {
                 case 'checkout.session.completed': {
+                    console.log('💰 Traitement du checkout complété');
                     const session = event.data.object;
-                    console.log('Session complète:', session);
+                    console.log('🔍 Session complète:', {
+                        id: session.id,
+                        customerId: session.customer,
+                        amount: session.amount_total,
+                        projetId: session.metadata.projetId
+                    });
 
                     if (!session.payment_intent || typeof session.payment_intent !== 'string') {
                         console.error('❌ Payment intent invalide');
@@ -164,9 +176,16 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                         where: { id: session.metadata.projetId }
                     });
 
+                    console.log('📂 Projet trouvé:', {
+                        id: projet.id,
+                        titre: projet.titre,
+                        vendable: projet.vendable
+                    });
+
                     const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent);
                     console.log('PaymentIntent récupéré:', {
                         id: paymentIntent.id,
+                        status: paymentIntent.status,
                         latest_charge: paymentIntent.latest_charge
                     });
 
@@ -198,7 +217,20 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                         }
                     });
 
+                    console.log('📝 Mise à jour du projet avec les données:', {
+                        sold: true,
+                        buyerEmail,
+                        buyerName,
+                        dateSold: new Date()
+                    });
+
                     try {
+                        console.log('📧 Préparation de l\'email');
+                        console.log('📧 Variables email:', {
+                            from: `VGOM Creation <postmaster@${process.env.MAILGUN_DOMAIN}>`,
+                            to: buyerEmail,
+                            template: "confirmation_achat"
+                        });
                         await mg.messages.create(process.env.MAILGUN_DOMAIN, {
                             from: `VGOM Creation <postmaster@${process.env.MAILGUN_DOMAIN}>`,
                             to: buyerEmail,  // Utilisation de l'email de l'acheteur
@@ -216,12 +248,13 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                         });
                         console.log('✉️ Email de confirmation envoyé');
                     } catch (emailError) {
-                        console.error('❌ Erreur lors de l\'envoi de l\'email:', emailError);
-                        // Ajout de plus de détails dans le log d'erreur
-                        console.error('Détails de l\'erreur:', {
+                        console.error('❌ Erreur email détaillée:', {
                             message: emailError.message,
+                            code: emailError.code,
                             details: emailError.details,
-                            stack: emailError.stack
+                            stack: emailError.stack,
+                            mailgunDomain: process.env.MAILGUN_DOMAIN,
+                            hasMailgunKey: !!process.env.MAILGUN_API_KEY
                         });
                     }
                     break;
@@ -235,14 +268,16 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                     break;
                 }
             }
-
+            console.log('✅ Traitement webhook terminé avec succès');
             return ctx.send({ received: true });
         } catch (err) {
-            console.error('❌ Erreur détaillée:', {
+            console.error('❌ Erreur webhook détaillée:', {
                 message: err.message,
                 name: err.name,
                 type: err.type,
-                stack: err.stack
+                stack: err.stack,
+                hasSignature: !!ctx.request.headers['stripe-signature'],
+                hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET_LOCAL
             });
             return ctx.badRequest(`Webhook Error: ${err.message}`);
         }
