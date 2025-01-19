@@ -145,7 +145,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
             const event = stripe.webhooks.constructEvent(
                 rawBody,
                 signature,
-                process.env.STRIPE_WEBHOOK_SECRET_LOCAL
+                webhookSecret
             );
 
             console.log('✅ Événement Stripe construit avec succès');
