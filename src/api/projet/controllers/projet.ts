@@ -156,6 +156,10 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                         break;
                     }
 
+                    // Récupération des détails de l'acheteur depuis la session Stripe
+                    const buyerEmail = session.customer_email;
+                    const buyerName = session.customer_details?.name;
+
                     const projet = await strapi.db.query('api::projet.projet').findOne({
                         where: { id: session.metadata.projetId }
                     });
@@ -179,23 +183,35 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                         data: {
                             sold: true,
                             receiptUrl: receipt_url,
-                            dateSold: new Date()
+                            dateSold: new Date(),
+                            buyer_email: buyerEmail,
+                            buyer_name: buyerName,
+                            payment_status: 'completed',
+                            transaction_id: session.payment_intent,
+                            purchase_metadata: {
+                                stripe_session_id: session.id,
+                                customer_locale: session.locale,
+                                payment_method_types: session.payment_method_types,
+                                amount_total: session.amount_total,
+                                currency: session.currency
+                            }
                         }
                     });
 
                     try {
                         await mg.messages.create(process.env.MAILGUN_DOMAIN, {
-                            from: `${process.env.APP_NAME} <postmaster@${process.env.MAILGUN_DOMAIN}>`, // Utilisez postmaster@ qui est vérifié
-                            to: session.customer_email,
+                            from: `VGOM Creation <postmaster@${process.env.MAILGUN_DOMAIN}>`,
+                            to: buyerEmail,  // Utilisation de l'email de l'acheteur
                             subject: `Confirmation de votre achat - ${projet.titre}`,
                             template: "confirmation_achat",
                             'h:X-Mailgun-Variables': JSON.stringify({
-                                customer_name: session.customer_details.name,
+                                customer_name: buyerName,  // Utilisation du nom de l'acheteur
                                 projet_title: projet.titre,
                                 amount: (session.amount_total / 100).toFixed(2),
                                 currency: session.currency.toUpperCase(),
                                 receipt_url: receipt_url,
-                                transaction_id: session.payment_intent
+                                transaction_id: session.payment_intent,
+                                purchase_date: new Date().toLocaleDateString('fr-FR')
                             })
                         });
                         console.log('✉️ Email de confirmation envoyé');

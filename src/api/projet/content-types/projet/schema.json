@@ -61,7 +61,36 @@
     "receiptUrl": {
       "type": "string",
       "required": false
+    },
+    "buyer_email": {
+      "type": "email",
+      "required": false,
+      "private": true
+    },
+    "buyer_name": {
+      "type": "string",
+      "required": false,
+      "private": true
+    },
+    "payment_status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "transaction_id": {
+      "type": "string",
+      "unique": true,
+      "required": false
+    },
+    "purchase_metadata": {
+      "type": "json",
+      "required": false,
+      "private": true
     }
-
   }
 }

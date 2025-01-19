@@ -534,6 +534,8 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    buyer_email: Schema.Attribute.Email & Schema.Attribute.Private;
+    buyer_name: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -547,12 +549,18 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
       'api::projet.projet'
     > &
       Schema.Attribute.Private;
+    payment_status: Schema.Attribute.Enumeration<
+      ['pending', 'completed', 'failed', 'refunded']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
     price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     priceId: Schema.Attribute.String & Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
+    purchase_metadata: Schema.Attribute.JSON & Schema.Attribute.Private;
     receiptUrl: Schema.Attribute.String;
     sold: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
+    transaction_id: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
