@@ -4,10 +4,28 @@
 
 import Stripe from 'stripe';
 import { factories } from '@strapi/strapi';
+import formData from 'form-data';
+import Mailgun from 'mailgun.js';
+import getRawBody from 'raw-body';
+import koaBody from 'koa-body';
+
+const webhookMiddleware = koaBody({
+    includeUnparsed: true,
+    jsonLimit: '10mb'
+});
+
 
 // Créez une instance de Stripe avec votre clé secrète
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2024-12-18.acacia',
+});
+
+// Configuration Mailgun
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({
+    username: 'api',
+    key: process.env.MAILGUN_API_KEY,
+    url: 'https://api.eu.mailgun.net'
 });
 
 // Configuration pour le développement
@@ -36,7 +54,9 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
             }
 
             // Vérifier que le projet existe et est vendable
-            const projet = await strapi.entityService.findOne('api::projet.projet', projetId);
+            const projet = await strapi.db.query('api::projet.projet').findOne({
+                where: { id: projetId }
+            });
 
             if (!projet) {
                 console.error('❌ Projet non trouvé');
@@ -81,31 +101,113 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
 
     // Ajout du handler webhook pour le développement
     async handleWebhook(ctx) {
-        const signature = ctx.request.headers['stripe-signature'];
-        console.log('🎯 Webhook reçu');
-
         try {
+            const signature = ctx.request.headers['stripe-signature'];
+            console.log('🎯 Webhook reçu');
+            console.log('📝 Signature:', signature);
+
+            // Désactiver le parsing automatique
+            ctx.request.body = null;
+
+            // Promesse qui attend que toutes les données soient reçues
+            const rawBody = await new Promise<string>((resolve, reject) => {
+                let data = '';
+
+                ctx.req.on('data', (chunk: Buffer) => {
+                    data += chunk.toString('utf8');
+                });
+
+                ctx.req.on('end', () => {
+                    if (!data) {
+                        console.log('⚠️ Aucune donnée reçue');
+                        reject(new Error('Aucune donnée reçue'));
+                        return;
+                    }
+                    console.log('📦 Données reçues, taille:', data.length);
+                    resolve(data);
+                });
+
+                ctx.req.on('error', (err) => {
+                    console.error('❌ Erreur de lecture:', err);
+                    reject(err);
+                });
+            });
+
+            if (typeof rawBody === 'string') {
+                console.log('📝 Début du corps brut:', rawBody.substring(0, 50));
+            }
+
             const event = stripe.webhooks.constructEvent(
-                ctx.request.body,
+                rawBody,
                 signature,
-                webhookSecret
+                process.env.STRIPE_WEBHOOK_SECRET_LOCAL
             );
 
-            console.log('📦 Type d\'événement:', event.type);
+            console.log('✅ Type d\'événement:', event.type);
 
+            // Le reste de votre code reste identique
             switch (event.type) {
                 case 'checkout.session.completed': {
                     const session = event.data.object;
-                    console.log(`Email du client : ${session.customer_email}`);
-                    console.log(`ID du projet : ${session.metadata.projetId}`);
-                    console.log('💰 Paiement réussi:', {
-                        sessionId: session.id,
-                        amount: session.amount_total / 100
+                    console.log('Session complète:', session);
+
+                    if (!session.payment_intent || typeof session.payment_intent !== 'string') {
+                        console.error('❌ Payment intent invalide');
+                        break;
+                    }
+
+                    const projet = await strapi.db.query('api::projet.projet').findOne({
+                        where: { id: session.metadata.projetId }
                     });
-                    // Mettez à jour votre base de données ici
-                    await strapi.entityService.update('api::projet.projet', session.metadata.projetId, {
-                        data: { sold: true },
+
+                    const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent);
+                    console.log('PaymentIntent récupéré:', {
+                        id: paymentIntent.id,
+                        latest_charge: paymentIntent.latest_charge
                     });
+
+                    if (!paymentIntent.latest_charge) {
+                        console.error('❌ Pas de charge associée au paiement');
+                        break;
+                    }
+
+                    const charge = await stripe.charges.retrieve(paymentIntent.latest_charge as string);
+                    const receipt_url = charge.receipt_url;
+
+                    await strapi.db.query('api::projet.projet').update({
+                        where: { id: session.metadata.projetId },
+                        data: {
+                            sold: true,
+                            receiptUrl: receipt_url,
+                            dateSold: new Date()
+                        }
+                    });
+
+                    try {
+                        await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+                            from: `${process.env.APP_NAME} <postmaster@${process.env.MAILGUN_DOMAIN}>`, // Utilisez postmaster@ qui est vérifié
+                            to: session.customer_email,
+                            subject: `Confirmation de votre achat - ${projet.titre}`,
+                            template: "confirmation_achat",
+                            'h:X-Mailgun-Variables': JSON.stringify({
+                                customer_name: session.customer_details.name,
+                                projet_title: projet.titre,
+                                amount: (session.amount_total / 100).toFixed(2),
+                                currency: session.currency.toUpperCase(),
+                                receipt_url: receipt_url,
+                                transaction_id: session.payment_intent
+                            })
+                        });
+                        console.log('✉️ Email de confirmation envoyé');
+                    } catch (emailError) {
+                        console.error('❌ Erreur lors de l\'envoi de l\'email:', emailError);
+                        // Ajout de plus de détails dans le log d'erreur
+                        console.error('Détails de l\'erreur:', {
+                            message: emailError.message,
+                            details: emailError.details,
+                            stack: emailError.stack
+                        });
+                    }
                     break;
                 }
                 case 'payment_intent.payment_failed': {
@@ -120,8 +222,13 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
 
             return ctx.send({ received: true });
         } catch (err) {
-            console.error('❌ Erreur webhook:', err);
-            return ctx.badRequest('Webhook Error');
+            console.error('❌ Erreur détaillée:', {
+                message: err.message,
+                name: err.name,
+                type: err.type,
+                stack: err.stack
+            });
+            return ctx.badRequest(`Webhook Error: ${err.message}`);
         }
     },
 

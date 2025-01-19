@@ -537,7 +537,8 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    dateSold: Schema.Attribute.DateTime;
+    description: Schema.Attribute.RichText & Schema.Attribute.Required;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -549,6 +550,7 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     priceId: Schema.Attribute.String & Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
+    receiptUrl: Schema.Attribute.String;
     sold: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;

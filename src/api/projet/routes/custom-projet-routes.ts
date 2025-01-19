@@ -10,7 +10,7 @@ export default {
         },
         {
             method: 'POST',
-            path: '/webhook',
+            path: '/projets/webhook',
             handler: 'projet.handleWebhook',
             config: {
                 auth: false,

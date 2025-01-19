@@ -17,7 +17,7 @@
       "required": true
     },
     "description": {
-      "type": "text",
+      "type": "richtext",
       "required": true
     },
     "url_projet": {
@@ -53,6 +53,15 @@
     "sold": {
       "type": "boolean",
       "default": false
+    },
+    "dateSold": {
+      "type": "datetime",
+      "required": false
+    },
+    "receiptUrl": {
+      "type": "string",
+      "required": false
     }
+
   }
 }
