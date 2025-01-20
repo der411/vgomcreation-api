@@ -50,10 +50,6 @@
       "required": false,
       "unique": true
     },
-    "sold": {
-      "type": "boolean",
-      "default": false
-    },
     "dateSold": {
       "type": "datetime",
       "required": false
@@ -91,6 +87,11 @@
       "type": "json",
       "required": false,
       "private": true
+    },
+    "sales_count": {
+      "type": "integer",
+      "default": 0,
+      "required": true
     }
   }
 }

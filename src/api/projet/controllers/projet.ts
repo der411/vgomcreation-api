@@ -178,7 +178,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                             await strapi.db.query('api::projet.projet').update({
                                 where: { id: session.metadata.projetId },
                                 data: {
-                                    sold: true,
+                                    sales_count: (projet.sales_count || 0) + 1,
                                     receiptUrl: receipt_url,
                                     dateSold: new Date(),
                                     buyer_email: buyerEmail,
@@ -196,7 +196,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                             });
 
                             console.log('📝 Mise à jour du projet avec les données:', {
-                                sold: true,
+                                sales_count: (projet.sales_count || 0) + 1,
                                 buyerEmail,
                                 buyerName,
                                 dateSold: new Date()
