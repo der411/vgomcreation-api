@@ -84,7 +84,8 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                 cancel_url: `${process.env.CLIENT_URL}/cancel`,
                 metadata: {
                     projetId: projetId
-                }
+                },
+                customer_email: ctx.request.body.email,
             });
 
             console.log('✅ Session créée:', {
@@ -104,13 +105,24 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
         try {
             console.log('🎯 Début du traitement webhook');
             const signature = ctx.request.headers['stripe-signature'];
-            const rawBody = await getRawBody(ctx.req); // Récupère le corps brut de la requête Stripe
+            const rawBody = ctx.request.body?.[Symbol.for('unparsedBody')];
+
+            if (!rawBody) {
+                console.error('❌ Le corps brut de la requête est manquant');
+                ctx.status = 400;
+                return (ctx.body = 'Webhook Error: Le corps brut est requis.');
+            }
 
             // Valider l'événement Stripe
-            const event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+            const event = stripe.webhooks.constructEvent(
+                rawBody,
+                signature,
+                webhookSecret
+            );
             console.log('✅ Webhook validé avec succès, type:', event.type);
 
             // Répondre immédiatement pour éviter les timeouts
+            ctx.status = 200;
             ctx.body = { received: true };
 
             // Déléguer le traitement en arrière-plan
@@ -134,7 +146,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                             }
 
                             // Récupération des détails de l'acheteur depuis la session Stripe
-                            const buyerEmail = session.customer_email;
+                            const buyerEmail = session.customer_email || session.customer_details?.email;
                             const buyerName = session.customer_details?.name;
 
                             const projet = await strapi.db.query('api::projet.projet').findOne({
@@ -199,7 +211,7 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                                     subject: `Confirmation de votre achat - ${projet.titre}`,
                                     template: "confirmation_achat",
                                     'h:X-Mailgun-Variables': JSON.stringify({
-                                        customer_name: buyerName, // Utilisation du nom de l'acheteur
+                                        customer_name: buyerName || 'Client', // Utilisation du nom de l'acheteur
                                         projet_title: projet.titre,
                                         amount: (session.amount_total / 100).toFixed(2),
                                         currency: session.currency.toUpperCase(),
@@ -224,6 +236,30 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
                             });
                             break;
                         }
+                        case 'invoice.payment_succeeded':
+                            // Paiement réussi
+                            const invoice = event.data.object;
+                            console.log('✅ Facture payée:', invoice);
+                            // Mettre à jour l'abonnement comme actif
+                            break;
+
+                        case 'invoice.payment_failed':
+                            // Paiement échoué
+                            const failedInvoice = event.data.object;
+                            console.log('❌ Paiement de la facture échoué:', failedInvoice);
+                            break;
+
+                        case 'customer.subscription.updated':
+                            // Abonnement mis à jour
+                            const updatedSubscription = event.data.object;
+                            console.log('🔄 Abonnement mis à jour:', updatedSubscription);
+                            break;
+
+                        case 'customer.subscription.deleted':
+                            // Abonnement annulé
+                            const deletedSubscription = event.data.object;
+                            console.log('🗑️ Abonnement annulé:', deletedSubscription);
+                            break;
 
                         default:
                             console.log(`❓ Événement non pris en charge : ${event.type}`);

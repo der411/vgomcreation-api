@@ -42,6 +42,14 @@ module.exports = ({ env }) => [
             formLimit: '10mb',
             textLimit: '10mb',
             strict: true,
+            parser: (ctx) => {
+                // Ne pas parser le body pour les webhooks Stripe
+                const isStripeWebhook = ctx.path.includes('/api/projets/webhook');
+                if (isStripeWebhook) {
+                    return false;
+                }
+                return true;
+            },
             rawBody: true, // Important !
             includeUnparsed: true
         },
