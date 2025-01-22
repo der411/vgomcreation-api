@@ -36,7 +36,7 @@ export default ({ env }) => {
                     expiresIn: '7d',
                 },
                 register: {
-                    allowedFields: ['username', 'email', 'password'],
+                    allowedFields: ['username', 'email', 'password', 'firstName', 'lastName'],
                 },
                 email: {
                     config: {
