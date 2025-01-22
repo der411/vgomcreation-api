@@ -558,6 +558,9 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     purchase_metadata: Schema.Attribute.JSON & Schema.Attribute.Private;
     receiptUrl: Schema.Attribute.String;
+    sales_count: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     transaction_id: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;

@@ -1,0 +1,9 @@
+{
+  "name": "strapi-provider-email-custom-mailgun",
+  "version": "1.0.0",
+  "description": "Custom Mailgun provider for Strapi",
+  "main": "index.js",
+  "dependencies": {
+    "form-data": "^4.0.0"
+  }
+}

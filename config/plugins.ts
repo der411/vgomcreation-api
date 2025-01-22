@@ -1,17 +1,54 @@
-export default ({ env }) => ({
-    upload: {
-        config: {
-            provider: 'cloudinary',
-            providerOptions: {
-                cloud_name: env('CLOUDINARY_NAME'),
-                api_key: env('CLOUDINARY_KEY'),
-                api_secret: env('CLOUDINARY_SECRET'),
-            },
-            actionOptions: {
-                upload: {},
-                uploadStream: {},
-                delete: {},
+
+export default ({ env }) => {
+
+    return {
+        upload: {
+            config: {
+                provider: 'cloudinary',
+                providerOptions: {
+                    cloud_name: env('CLOUDINARY_NAME'),
+                    api_key: env('CLOUDINARY_KEY'),
+                    api_secret: env('CLOUDINARY_SECRET'),
+                },
+                actionOptions: {
+                    upload: {},
+                    uploadStream: {},
+                    delete: {},
+                },
             },
         },
-    },
-});
+        email: {
+            config: {
+                provider: 'strapi-provider-email-custom-mailgun',
+                providerOptions: {
+                    key: env('MAILGUN_API_KEY'),
+                    domain: env('MAILGUN_DOMAIN'),
+                },
+                settings: {
+                    defaultFrom: 'VGOM Creation <postmaster@mg.vgomcreation.fr>',
+                    defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
+                },
+            },
+        },
+        'users-permissions': {
+            config: {
+                jwt: {
+                    expiresIn: '7d',
+                },
+                register: {
+                    allowedFields: ['username', 'email', 'password'],
+                },
+                email: {
+                    config: {
+                        from: 'VGOM Creation <postmaster@mg.vgomcreation.fr>',
+                        replyTo: 'postmaster@mg.vgomcreation.fr',
+                    },
+                    settings: {
+                        defaultFrom: 'VGOM Creation <postmaster@mg.vgomcreation.fr>',
+                        defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
+                    },
+                }
+            },
+        },
+    };
+};
