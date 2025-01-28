@@ -1,21 +1,20 @@
 export default {
     routes: [
+        // Route principale pour initier l'auth Google
         {
             method: 'GET',
-            path: '/auth/google',
-            handler: 'auth.googleCallback',
+            path: '/api/connect/google',
+            handler: 'auth.googleAuth',
             config: {
-                policies: [],
                 auth: false
             }
         },
+        // Route de callback pour le retour de Google
         {
-            method: 'POST',
-            path: '/auth/google/callback',
-            handler: 'auth.googleLogin',
+            method: 'GET',
+            path: '/api/connect/google/callback',
+            handler: 'auth.googleCallback',
             config: {
-                policies: [],
-                middlewares: [],
                 auth: false
             }
         }

@@ -52,20 +52,10 @@ export default ({ env }) => {
                         enabled: true,
                         clientId: env('GOOGLE_CLIENT_ID'),
                         clientSecret: env('GOOGLE_CLIENT_SECRET'),
-                        redirectUri: 'https://vgomcreation-api.onrender.com/api/auth/google/callback',
-                        accessTokenUrl: 'https://oauth2.googleapis.com/token',
-                        scope: ['email', 'profile'],
-                        profileId: 'sub',
-                        profile: (profile) => {
-                            return {
-                                id: profile.sub,
-                                email: profile.email,
-                                username: profile.email.split('@')[0],
-                                confirmed: profile.email_verified,
-                            };
-                        },
+                        callback: '/api/connect/google/callback',
+                        scope: ['email', 'profile']
                     },
-                },
+                }
             },
         },
     }

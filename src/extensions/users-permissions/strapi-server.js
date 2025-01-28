@@ -114,26 +114,39 @@ module.exports = (plugin) => {
     };
 
     plugin.controllers.auth.googleCallback = async (ctx) => {
+        const provider = 'google';
+
         try {
-            const { code } = ctx.query;
+            const params = ctx.query;
+            const user = await strapi.plugins['users-permissions'].services.providers.callback(
+                provider,
+                params
+            );
 
-            if (!code) {
-                return ctx.badRequest("Missing authorization code");
-            }
-
-            // Échange du code d'autorisation contre un jeton d'accès
-            const { data } = await axios.post('https://oauth2.googleapis.com/token', {
-                client_id: process.env.GOOGLE_CLIENT_ID,
-                client_secret: process.env.GOOGLE_CLIENT_SECRET,
-                code,
-                grant_type: 'authorization_code',
-                redirect_uri: `${process.env.BACKEND_URL}/api/auth/google/callback`
+            const jwt = strapi.plugins['users-permissions'].services.jwt.issue({
+                id: user.id,
             });
 
-            return ctx.send(data);
+            ctx.send({
+                jwt,
+                user: user
+            });
         } catch (error) {
-            console.error("Google OAuth Error:", error.response?.data || error.message);
-            ctx.badRequest("Failed to authenticate with Google");
+            ctx.throw(400, error.message);
+        }
+    };
+
+    plugin.controllers.auth.googleAuth = async (ctx) => {
+        const { query } = ctx;
+        const provider = 'google';
+
+        try {
+            await strapi.plugins['users-permissions'].services.providers.connect(
+                provider,
+                query
+            );
+        } catch (error) {
+            ctx.throw(400, error.message);
         }
     };
 
