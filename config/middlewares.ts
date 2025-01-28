@@ -8,7 +8,7 @@ module.exports = ({ env }) => [
                 directives: {
                     'connect-src': ["'self'", "https://accounts.google.com"],
                     'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                    "frame-ancestors": ["'self'", "https://accounts.google.com"],
+                    'frame-src': ["'self'", "https://accounts.google.com"],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     upgradeInsecureRequests: null,
                 },
@@ -17,8 +17,8 @@ module.exports = ({ env }) => [
                     key: 'strapi.sid',
                     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'lax'
+                    secure: true,
+                    sameSite: 'strict'
                 },
             },
             crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },

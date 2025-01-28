@@ -52,7 +52,7 @@ export default ({ env }) => {
                         enabled: true,
                         clientId: env('GOOGLE_CLIENT_ID'),
                         clientSecret: env('GOOGLE_CLIENT_SECRET'),
-                        callback: '/api/connect/google/callback',
+                        callback: '/api/auth/google/callback',
                         scope: ['email', 'profile']
                     },
                 }
