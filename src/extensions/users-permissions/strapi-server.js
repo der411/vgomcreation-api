@@ -107,6 +107,29 @@ module.exports = (plugin) => {
         }
     };
 
+    plugin.controllers.auth.googleCallback = async (ctx) => {
+        try {
+            const { code } = ctx.query;
+
+            if (!code) {
+                return ctx.badRequest("Missing authorization code");
+            }
+
+            // Échange du code d'autorisation contre un jeton d'accès
+            const { data } = await axios.post('https://oauth2.googleapis.com/token', {
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                code,
+                grant_type: 'authorization_code',
+                redirect_uri: `${process.env.BACKEND_URL}/api/auth/google/callback`
+            });
+
+            return ctx.send(data);
+        } catch (error) {
+            console.error("Google OAuth Error:", error.response?.data || error.message);
+            ctx.badRequest("Failed to authenticate with Google");
+        }
+    };
 
     return plugin;
 };
