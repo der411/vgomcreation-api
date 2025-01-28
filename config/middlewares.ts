@@ -41,7 +41,7 @@ module.exports = ({ env }) => [
                 'Accept',
                 'Access-Control-Allow-Headers'
             ],
-            credentials: false,
+            credentials: true,
             maxAge: 3600
         },
     },
