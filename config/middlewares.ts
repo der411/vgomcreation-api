@@ -21,13 +21,14 @@ module.exports = ({ env }) => [
                   sameSite: 'lax'
               },
           },
+          crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
       },
   },
   {
       name: 'strapi::cors',
       config: {
           origin: [
-              'https://www.vgomcreation.fr', 'http://localhost:3000'
+              'https://www.vgomcreation.fr', 'http://localhost:3000', 'https://vgomcreation-api.onrender.com'
           ],
           methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
           headers: [
