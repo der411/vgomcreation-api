@@ -4,7 +4,13 @@ module.exports = ({ env }) => [
         name: 'strapi::session',
         config: {
             secret: process.env.SESSION_SECRET || 'a-random-secret',
-            maxAge: 24 * 60 * 60 * 1000 // 24 heures
+            maxAge: 24 * 60 * 60 * 1000,
+            cookie: {
+                secure: false, // Permettre les cookies sur HTTP et HTTPS
+                httpOnly: true,
+                sameSite: 'lax',
+                maxAge: 24 * 60 * 60 * 1000
+            }
         }
     },
     {
