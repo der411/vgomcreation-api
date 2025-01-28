@@ -65,7 +65,16 @@ module.exports = ({ env }) => [
             includeUnparsed: true
         },
     },
-    'strapi::session',
+    {
+        name: 'strapi::session',
+        config: {
+            key: 'koa.sess',
+            maxAge: 86400000, // 1 jour
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Cookies sécurisés seulement en production
+            sameSite: 'lax', // Ajuste la politique SameSite
+        },
+    },
     'strapi::poweredBy',
     'strapi::public',
     'strapi::favicon'
