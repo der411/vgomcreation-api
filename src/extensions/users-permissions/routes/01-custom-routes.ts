@@ -2,7 +2,7 @@ export default {
     routes: [
         {
             method: 'GET',
-            path: '/auth/google/callback',
+            path: '/auth/google',
             handler: 'auth.googleCallback',
             config: {
                 policies: [],

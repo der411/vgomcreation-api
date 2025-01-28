@@ -1,3 +1,5 @@
+
+
 module.exports = (plugin) => {
 
     const defaultAuthController = plugin.controllers.auth;
@@ -22,9 +24,6 @@ module.exports = (plugin) => {
             if (user.provider === 'local' && !user.confirmed) {
                 return ctx.badRequest("Votre email n'est pas encore confirmé.");
             }
-
-
-
 
 // Appel au contrôleur d'origine
             return defaultAuthController.callback(ctx);
