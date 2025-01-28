@@ -1,4 +1,3 @@
-
 export default ({ env }) => {
 
     return {
@@ -51,8 +50,8 @@ export default ({ env }) => {
                 providers: {
                     google: {
                         enabled: true,
-                        clientId: process.env.GOOGLE_CLIENT_ID,
-                        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                        clientId: env('GOOGLE_CLIENT_ID'),
+                        clientSecret: env('GOOGLE_CLIENT_SECRET'),
                         callback: '/api/auth/google/callback',
                     },
                 },

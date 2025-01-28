@@ -6,9 +6,9 @@ module.exports = ({ env }) => [
           contentSecurityPolicy: {
               useDefaults: true,
               directives: {
-                  'connect-src': ["'self'", 'https:'],
+                  'connect-src': ["'self'", "https://accounts.google.com"],
                   'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                  'frame-src': ["'self'", "https://accounts.google.com"],
+                  "frame-ancestors": ["'self'", "https://accounts.google.com"],
                   'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                   upgradeInsecureRequests: null,
               },
