@@ -1,50 +1,59 @@
 module.exports = ({ env }) => [
-  'strapi::errors',
-  {
-      name: 'strapi::security',
-      config: {
-          contentSecurityPolicy: {
-              useDefaults: true,
-              directives: {
-                  'connect-src': ["'self'", "https://accounts.google.com"],
-                  'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                  "frame-ancestors": ["'self'", "https://accounts.google.com"],
-                  'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                  upgradeInsecureRequests: null,
-              },
-              session: {
-                  enabled: true,
-                  key: 'strapi.sid',
-                  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-                  httpOnly: true,
-                  secure: process.env.NODE_ENV === 'production',
-                  sameSite: 'lax'
-              },
-          },
-          crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
-      },
-  },
-  {
-      name: 'strapi::cors',
-      config: {
-          origin: [
-              'https://www.vgomcreation.fr', 'http://localhost:3000', 'https://vgomcreation-api.onrender.com'
-          ],
-          methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-          headers: [
-              'Content-Type',
-              'Authorization',
-              'Origin',
-              'Accept',
-              'Access-Control-Allow-Headers'
-          ],
-          credentials: true,
-          maxAge: 3600
-      },
-  },
-  'strapi::poweredBy',
-  'strapi::logger',
-  'strapi::query',
+    'strapi::errors',
+    {
+        name: 'strapi::session',
+        config: {
+            secret: process.env.SESSION_SECRET || 'a-random-secret',
+            maxAge: 24 * 60 * 60 * 1000 // 24 heures
+        }
+    },
+    {
+        name: 'strapi::security',
+        config: {
+            contentSecurityPolicy: {
+                useDefaults: true,
+                directives: {
+                    'connect-src': ["'self'", "https://accounts.google.com"],
+                    'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
+                    "frame-ancestors": ["'self'", "https://accounts.google.com"],
+                    'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
+                    upgradeInsecureRequests: null,
+                },
+                session: {
+                    enabled: true,
+                    key: 'strapi.sid',
+                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'lax'
+                },
+            },
+            crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+        },
+    },
+    {
+        name: 'strapi::cors',
+        config: {
+            origin: [
+                'https://www.vgomcreation.fr',
+                'http://localhost:3000',
+                'https://vgomcreation-api.onrender.com',
+                'https://accounts.google.com'
+            ],
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+            headers: [
+                'Content-Type',
+                'Authorization',
+                'Origin',
+                'Accept',
+                'Access-Control-Allow-Headers'
+            ],
+            credentials: true,
+            maxAge: 3600
+        },
+    },
+    'strapi::logger',
+    'strapi::query',
     {
         name: 'strapi::body',
         config: {
@@ -56,18 +65,14 @@ module.exports = ({ env }) => [
             },
             strict: true,
             parser: (ctx) => {
-                // Ne pas parser le body pour les webhooks Stripe
                 const isStripeWebhook = ctx.path.includes('/api/projets/webhook');
-                if (isStripeWebhook) {
-                    return false;
-                }
-                return true;
+                return !isStripeWebhook;
             },
-            rawBody: true, // Important !
+            rawBody: true,
             includeUnparsed: true
         },
     },
-
-    'strapi::favicon',
-  'strapi::public',
-]
+    'strapi::poweredBy',
+    'strapi::public',
+    'strapi::favicon'
+];
