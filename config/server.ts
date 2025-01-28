@@ -11,6 +11,7 @@ module.exports = ({ env }) => {
     port: env.int('PORT', 1337),
     url, // Utilisation de la constante url
     client_url, // Ajout explicite de la constante client_url pour l'utiliser dans les templates ou autres
+    proxy: true,
     app: {
       keys: env.array('APP_KEYS'),
     },
