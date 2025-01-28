@@ -1,18 +1,6 @@
 module.exports = ({ env }) => [
     'strapi::errors',
     {
-        name: 'strapi::session',
-        config: {
-            secret: env('APP_KEYS', 'defaultSecret'),
-            cookie: {
-                secure: false,
-                httpOnly: true,
-                sameSite: 'none',
-                maxAge: 24 * 60 * 60 * 1000
-            }
-        }
-    },
-    {
         name: 'strapi::security',
         config: {
             contentSecurityPolicy: {
@@ -77,6 +65,7 @@ module.exports = ({ env }) => [
             includeUnparsed: true
         },
     },
+    'strapi::session',
     'strapi::poweredBy',
     'strapi::public',
     'strapi::favicon'
