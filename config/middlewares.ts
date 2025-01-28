@@ -3,12 +3,11 @@ module.exports = ({ env }) => [
     {
         name: 'strapi::session',
         config: {
-            secret: process.env.SESSION_SECRET || 'a-random-secret',
-            maxAge: 24 * 60 * 60 * 1000,
+            secret: env('APP_KEYS', 'defaultSecret'),
             cookie: {
-                secure: false, // Permettre les cookies sur HTTP et HTTPS
+                secure: false,
                 httpOnly: true,
-                sameSite: 'lax',
+                sameSite: 'none',
                 maxAge: 24 * 60 * 60 * 1000
             }
         }
@@ -54,7 +53,7 @@ module.exports = ({ env }) => [
                 'Accept',
                 'Access-Control-Allow-Headers'
             ],
-            credentials: true,
+            credentials: false,
             maxAge: 3600
         },
     },
