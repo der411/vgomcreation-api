@@ -31,7 +31,8 @@
       "type": "email",
       "minLength": 6,
       "configurable": false,
-      "required": true
+      "required": true,
+      "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
     },
     "provider": {
       "type": "string",
@@ -39,7 +40,8 @@
     },
     "password": {
       "type": "password",
-      "minLength": 6,
+      "minLength": 8,
+      "regex": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
       "configurable": false,
       "private": true,
       "searchable": false

@@ -19,10 +19,10 @@ module.exports = (plugin) => {
                 return ctx.badRequest("Utilisateur introuvable");
             }
 
-            // Vérifiez si l'utilisateur a confirmé son email
-            if (!user.confirmed) {
+            if (user.provider === 'local' && !user.confirmed) {
                 return ctx.badRequest("Votre email n'est pas encore confirmé.");
             }
+
 
 
 
@@ -56,12 +56,57 @@ module.exports = (plugin) => {
             });
 
             // Permettre à la page de succès de s'afficher avant la redirection
-            ctx.redirect('http://localhost:3000/email-confirmation-success');
+            const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+            ctx.redirect(`${clientUrl}/email-confirmation-success`);
+
 
         } catch (err) {
-            ctx.redirect('http://localhost:3000/login');
+            ctx.redirect(`${clientUrl}/login?error=email-confirmation-failed`);
         }
     };
+
+    plugin.controllers.auth.googleLogin = async (ctx) => {
+        const { idToken } = ctx.request.body;
+
+        try {
+            // Valider le token Google côté serveur
+            const ticket = await client.verifyIdToken({
+                idToken,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            const payload = ticket.getPayload();
+
+            // Vérifier si l'utilisateur existe déjà
+            let user = await strapi.query("plugin::users-permissions.user").findOne({
+                where: { email: payload.email },
+            });
+
+            if (!user) {
+                // Créer un nouvel utilisateur Google
+                user = await strapi.query("plugin::users-permissions.user").create({
+                    data: {
+                        email: payload.email,
+                        username: payload.name || payload.email.split('@')[0],
+                        provider: 'google',
+                        confirmed: true, // On considère que Google a vérifié l'email
+                    },
+                });
+            }
+
+            // Générer un JWT pour l'utilisateur
+            const token = strapi.plugins['users-permissions'].services.jwt.issue({
+                id: user.id,
+            });
+
+            ctx.send({
+                jwt: token,
+                user,
+            });
+        } catch (err) {
+            ctx.badRequest('Google authentication failed', { error: err.message });
+        }
+    };
+
 
     return plugin;
 };

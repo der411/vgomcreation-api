@@ -26,6 +26,7 @@ module.exports = ({ env }) => {
           'https://vgomcreation.fr',
           'http://localhost:3000',
         ], // Origines autorisées pour le CORS
+          credentials: true,
       },
       public: {
         path: './public', // Répertoire pour servir les fichiers publics

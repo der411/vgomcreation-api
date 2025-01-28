@@ -47,7 +47,15 @@ export default ({ env }) => {
                         defaultFrom: 'VGOM Creation <postmaster@mg.vgomcreation.fr>',
                         defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
                     },
-                }
+                },
+                providers: {
+                    google: {
+                        enabled: true,
+                        clientId: process.env.GOOGLE_CLIENT_ID,
+                        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                        callback: '/api/auth/google/callback',
+                    },
+                },
             },
         },
     };
