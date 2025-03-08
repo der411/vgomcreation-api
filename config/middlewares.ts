@@ -6,11 +6,16 @@ module.exports = ({ env }) => [
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
-                    'connect-src': ["'self'", "https://accounts.google.com"],
+                    'connect-src': ["'self'", "https:"],
                     'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     'frame-src': ["'self'", "https://accounts.google.com"],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
+                    'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'accounts.google.com'],
+                    'frame-ancestors': ["'self'"],
                     upgradeInsecureRequests: process.env.NODE_ENV === 'production',
+                },
+                frameguard: {
+                    action: 'sameorigin'
                 },
                 session: {
                     enabled: true,
