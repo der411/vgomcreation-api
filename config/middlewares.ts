@@ -6,24 +6,19 @@ module.exports = ({ env }) => [
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
-                    'connect-src': ["'self'", "https:"],
+                    'connect-src': ["'self'", "https://accounts.google.com"],
                     'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     'frame-src': ["'self'", "https://accounts.google.com"],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                    'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'accounts.google.com'],
-                    'frame-ancestors': ["'self'"],
-                    upgradeInsecureRequests: process.env.NODE_ENV === 'production',
-                },
-                frameguard: {
-                    action: 'sameorigin'
+                    upgradeInsecureRequests: null,
                 },
                 session: {
                     enabled: true,
                     key: 'strapi.sid',
                     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
                     httpOnly: true,
-                    secure: process.env.NODE_ENV !== 'development',
-                    sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none'
+                    secure: true,
+                    sameSite: 'strict'
                 },
             },
             crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
