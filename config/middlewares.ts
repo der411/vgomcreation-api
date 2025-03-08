@@ -10,15 +10,15 @@ module.exports = ({ env }) => [
                     'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     'frame-src': ["'self'", "https://accounts.google.com"],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                    upgradeInsecureRequests: null,
+                    upgradeInsecureRequests: process.env.NODE_ENV === 'production',
                 },
                 session: {
                     enabled: true,
                     key: 'strapi.sid',
                     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
                     httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict'
+                    secure: process.env.NODE_ENV !== 'development',
+                    sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none'
                 },
             },
             crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
