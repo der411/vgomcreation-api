@@ -48,37 +48,6 @@ export default factories.createCoreController('api::blog.blog', ({ strapi }) => 
         return ctx.send({ data: updatedBlog });
     },
 
-    async getLikes(ctx: Context) {
-        try {
-            const userId = ctx.state.user?.id;
-
-            if (!userId) {
-                return ctx.unauthorized('Utilisateur non authentifié');
-            }
-
-            // Récupérer tous les blogs likés par l'utilisateur
-            const likedBlogs = await strapi.db.query('api::blog.blog').findMany({
-                where: {
-                    likes_users: {
-                        id: userId
-                    }
-                },
-                select: ['id']
-            });
-
-            // Formater la réponse
-            const likes = likedBlogs.map(blog => ({
-                articleId: blog.id
-            }));
-
-            return ctx.send({ likes });
-
-        } catch (error) {
-            console.error('Erreur dans getLikes:', error);
-            return ctx.badRequest('Erreur lors de la récupération des likes');
-        }
-    },
-
     async toggleLike(ctx) {
         const { id } = ctx.params;
         const userId = ctx.state.user.id;
