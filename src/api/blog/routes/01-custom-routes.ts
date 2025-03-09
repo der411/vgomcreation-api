@@ -25,6 +25,15 @@ export default {
             path: '/blogs/:id/toggle-like',
             handler: 'blog.toggleLike',
         },
-
+        {
+            method: 'GET',
+            path: '/users/me/likes',
+            handler: 'blog.getLikes',
+            config: {
+                auth: true,
+                description: 'Récupérer les likes de l\'utilisateur connecté',
+                tags: ['Blog', 'User'],
+            },
+        },
     ],
 };
