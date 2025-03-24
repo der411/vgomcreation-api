@@ -6,47 +6,32 @@ module.exports = ({ env }) => [
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
-                    'connect-src': ["'self'", "https://accounts.google.com"],
-                    'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
-                    'frame-src': ["'self'", "https://accounts.google.com"],
+                    'connect-src': ["'self'", 'https:', 'http:'], // Élargir pour autoriser toutes les connexions HTTPS
+                    'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com', 'lh3.googleusercontent.com'], // Ajouter Google Images
+                    'frame-src': ["'self'", 'https://accounts.google.com', 'https://*.google.com'],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     upgradeInsecureRequests: null,
                 },
-                session: {
-                    enabled: true,
-                    key: 'strapi.sid',
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict'
-                },
             },
-            crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+            crossOriginOpenerPolicy: {
+                policy: 'unsafe-none' // Modifier pour permettre les communications cross-origin avec la popup Google
+            },
         },
     },
     {
         name: 'strapi::cors',
         config: {
-            origin: [
-                'https://www.vgomcreation.fr',
-                'http://localhost:3000',
-                'https://vgomcreation-api.onrender.com',
-                'https://accounts.google.com'
-            ],
+            origin: ['https://www.vgomcreation.fr', 'http://localhost:3000', '*'], // Ajouter * pour déboguer
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-            headers: [
-                'Content-Type',
-                'Authorization',
-                'Origin',
-                'Accept',
-                'Access-Control-Allow-Headers'
-            ],
+            headers: ['*'], // Autoriser tous les headers
             credentials: true,
-            maxAge: 3600
+            maxAge: 3600,
+            keepHeaderOnError: true, // Important pour que les en-têtes CORS soient présents même en cas d'erreur
         },
     },
     'strapi::logger',
     'strapi::query',
+    // Autres middlewares inchangés
     {
         name: 'strapi::body',
         config: {
@@ -69,10 +54,10 @@ module.exports = ({ env }) => [
         name: 'strapi::session',
         config: {
             key: 'koa.sess',
-            maxAge: 86400000, // 1 jour
+            maxAge: 86400000,
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Cookies sécurisés seulement en production
-            sameSite: 'lax', // Ajuste la politique SameSite
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
         },
     },
     'strapi::poweredBy',
