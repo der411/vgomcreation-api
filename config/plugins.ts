@@ -53,7 +53,7 @@ export default ({ env }) => {
                         icon: 'google',
                         key: env('GOOGLE_CLIENT_ID'),
                         secret: env('GOOGLE_CLIENT_SECRET'),
-                        callback: env('GOOGLE_CALLBACK_URL') || '/auth/google/callback',
+                        callback: '/api/connect/google/callback',
                         scope: ['email', 'profile'],
                     },
                 }
