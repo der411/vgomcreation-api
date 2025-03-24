@@ -50,11 +50,11 @@ export default ({ env }) => {
                 providers: {
                     google: {
                         enabled: true,
-                        clientId: env('GOOGLE_CLIENT_ID'),
-                        callback: env('NODE_ENV') === 'development'
-                            ? '/api/auth/google/callback'
-                            : 'https://vgomcreation-api.onrender.com/api/auth/google/callback',
-                        scope: ['email', 'profile']
+                        icon: 'google',
+                        key: env('GOOGLE_CLIENT_ID'),
+                        secret: env('GOOGLE_CLIENT_SECRET'),
+                        callback: env('GOOGLE_CALLBACK_URL') || '/auth/google/callback',
+                        scope: ['email', 'profile'],
                     },
                 }
             },
