@@ -47,6 +47,20 @@ export default ({ env }) => {
                         defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
                     },
                 },
+                providers: {
+                    google: {
+                        enabled: true,
+                        config: {
+                            clientId: env('GOOGLE_CLIENT_ID'),
+                            clientSecret: env('GOOGLE_CLIENT_SECRET'),
+                            // URL où Google redirigera après l'authentification (côté backend)
+                            callback: '/api/connect/google/callback',
+                            // URL où l'utilisateur sera redirigé après l'authentification (côté frontend)
+                            redirect_uri: 'https://vgomcreation.fr/auth/google/callback',
+                            scope: ['email', 'profile']
+                        }
+                    }
+                },
             },
         },
     }
