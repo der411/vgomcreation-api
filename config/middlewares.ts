@@ -3,14 +3,11 @@ module.exports = ({ env }) => [
         name: 'strapi::session',
         config: {
             enabled: true,
-            client: 'cookie',
+            // Utilisation d'un store mémoire plutôt que des cookies
+            client: 'memory',
             key: 'strapi.sid',
-            prefix: 'strapi:sess:',
             secretKeys: [env('APP_KEYS', 'defaultSecretKey')],
-            httpOnly: true,
             maxAge: 86400000,
-            sameSite: 'none',
-            secure: process.env.NODE_ENV === 'production',
         }
     },
     'strapi::errors',
