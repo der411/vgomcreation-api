@@ -1,19 +1,22 @@
 module.exports = ({ env }) => [
     {
-        name: 'strapi::session',
+        name: "strapi::session",
         config: {
-            key: 'koa.sess',
-            rolling: true,
-            maxAge: 86400000, // 24 heures
-            secure: process.env.NODE_ENV === 'production', // Sécurisé uniquement en production
+            key: "koa.sess",
+            maxAge: 86400000, // 1 jour
             httpOnly: true,
-            sameSite: 'lax', // Changez de 'strict' à 'lax'
-        }
+            secure: process.env.NODE_ENV === "production", // Mettre false pour tester en local si besoin
+            sameSite: "None", // Important pour le cross-site (sinon, les cookies sont bloqués)
+        },
     },
     'strapi::errors',
     {
         name: 'strapi::security',
         config: {
+            cors: {
+                origin: ["https://www.vgomcreation.fr"],
+                credentials: true, // Permet d'envoyer les cookies cross-origin
+            },
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
