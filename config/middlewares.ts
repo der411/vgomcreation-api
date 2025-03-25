@@ -2,9 +2,12 @@ module.exports = ({ env }) => [
     {
         name: 'strapi::session',
         config: {
-            cookieName: 'strapi.sid',
-            keys: process.env.APP_KEYS.split(','),
-            maxAge: 24 * 60 * 60 * 1000,
+            key: 'myapp_session',
+            rolling: true,
+            maxAge: 86400000, // 24 heures
+            secure: process.env.NODE_ENV === 'production', // Sécurisé uniquement en production
+            httpOnly: true,
+            sameSite: 'lax', // Changez de 'strict' à 'lax'
         }
     },
     'strapi::errors',
@@ -21,14 +24,8 @@ module.exports = ({ env }) => [
                     upgradeInsecureRequests: null,
                 },
             },
-            cookies: {
-                secure: true, // Force HTTPS
-                httpOnly: true, // Sécurité supplémentaire
-                sameSite: 'strict', // Politique de même site
-            },
             forceHttps: true,
-            trustProxy: true,
-            crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+            trustProxy: 'IP',  // Configuration plus spécifique du proxy
         },
     },
     {
