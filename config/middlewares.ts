@@ -1,5 +1,16 @@
 module.exports = ({ env }) => [
-    'strapi::session',
+    {
+        name: 'strapi::session',
+        config: {
+            cookieName: 'strapi.sid',
+            keys: process.env.APP_KEYS.split(','),
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: false,  // Temporairement désactivé pour tester
+            store: {
+                type: 'memory',
+            }
+        }
+    },
     'strapi::errors',
     {
         name: 'strapi::security',
