@@ -1,5 +1,4 @@
 export default ({ env }) => {
-
     return {
         upload: {
             config: {
@@ -47,6 +46,17 @@ export default ({ env }) => {
                         defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
                     },
                 },
+                providers: {
+                    google: {
+                        enabled: true,
+                        config: {
+                            clientId: env('GOOGLE_CLIENT_ID'),
+                            clientSecret: env('GOOGLE_CLIENT_SECRET'),
+                            callback: env('GOOGLE_CALLBACK_URL', 'https://vgomcreation.fr/auth/google/callback'),
+                            scope: ['email', 'profile']
+                        }
+                    }
+                }
             },
         },
     }

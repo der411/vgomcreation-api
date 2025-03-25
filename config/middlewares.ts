@@ -1,4 +1,18 @@
 module.exports = ({ env }) => [
+    {
+        name: 'strapi::session',
+        config: {
+            enabled: true,
+            client: 'cookie',
+            key: 'strapi.sid',
+            prefix: 'strapi:sess:',
+            secretKeys: [env('APP_KEYS', 'defaultSecretKey')],
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+        }
+    },
     'strapi::errors',
     {
         name: 'strapi::security',
@@ -23,7 +37,8 @@ module.exports = ({ env }) => [
                 'https://www.vgomcreation.fr',
                 'http://localhost:3000',
                 'https://vgomcreation-api.onrender.com',
-                'https://accounts.google.com'
+                'https://accounts.google.com',
+                'https://vgomcreation.fr' // Ajouté cette origine qui pourrait être nécessaire
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
             headers: [
