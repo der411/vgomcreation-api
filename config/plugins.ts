@@ -47,16 +47,6 @@ export default ({ env }) => {
                         defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
                     },
                 },
-                providers: {
-                    google: {
-                        enabled: true,
-                        clientId: env('GOOGLE_CLIENT_ID'),
-                        callback: env('NODE_ENV') === 'development'
-                            ? '/api/auth/google/callback'
-                            : 'https://vgomcreation-api.onrender.com/api/auth/google/callback',
-                        scope: ['email', 'profile']
-                    },
-                }
             },
         },
     }

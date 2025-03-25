@@ -12,14 +12,6 @@ module.exports = ({ env }) => [
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     upgradeInsecureRequests: null,
                 },
-                session: {
-                    enabled: true,
-                    key: 'strapi.sid',
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict'
-                },
             },
             crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
         },
@@ -63,16 +55,6 @@ module.exports = ({ env }) => [
             },
             rawBody: true,
             includeUnparsed: true
-        },
-    },
-    {
-        name: 'strapi::session',
-        config: {
-            key: 'koa.sess',
-            maxAge: 86400000, // 1 jour
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Cookies sécurisés seulement en production
-            sameSite: 'lax', // Ajuste la politique SameSite
         },
     },
     'strapi::poweredBy',
