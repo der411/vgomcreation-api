@@ -37,6 +37,7 @@ module.exports = ({ env }) => [
             maxAge: 3600
         },
     },
+    'strapi::poweredBy',
     'strapi::logger',
     'strapi::query',
     {
@@ -57,7 +58,7 @@ module.exports = ({ env }) => [
             includeUnparsed: true
         },
     },
-    'strapi::poweredBy',
-    'strapi::public',
-    'strapi::favicon'
+    'strapi::session',
+    'strapi::favicon',
+    'strapi::public'
 ];
