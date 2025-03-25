@@ -1,4 +1,5 @@
 module.exports = ({ env }) => [
+    'strapi::session',
     'strapi::errors',
     {
         name: 'strapi::security',
@@ -58,7 +59,6 @@ module.exports = ({ env }) => [
             includeUnparsed: true
         },
     },
-    'strapi::session',
     'strapi::favicon',
     'strapi::public'
 ];
