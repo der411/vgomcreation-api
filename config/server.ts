@@ -19,5 +19,11 @@ module.exports = ({ env }) => {
         secret: env('ADMIN_JWT_SECRET'),
       },
     },
+    settings: {
+      cors: {
+        origin: ['https://www.vgomcreation.fr'],
+        credentials: true, // S'assurer que les cookies sont bien envoyés
+      },
+    },
   };
 };

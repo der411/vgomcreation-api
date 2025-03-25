@@ -2,7 +2,7 @@ module.exports = ({ env }) => [
     {
         name: 'strapi::session',
         config: {
-            key: 'myapp_session',
+            key: 'koa.sess',
             rolling: true,
             maxAge: 86400000, // 24 heures
             secure: process.env.NODE_ENV === 'production', // Sécurisé uniquement en production
