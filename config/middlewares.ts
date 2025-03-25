@@ -21,6 +21,8 @@ module.exports = ({ env }) => [
                     upgradeInsecureRequests: null,
                 },
             },
+            forceHttps: true,
+            trustProxy: true,
             crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
         },
     },
