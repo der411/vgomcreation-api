@@ -1,14 +1,5 @@
 module.exports = ({ env }) => [
-    {
-        name: "strapi::session",
-        config: {
-            key: "koa.sess",
-            maxAge: 86400000, // 1 jour
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Mettre false pour tester en local si besoin
-            sameSite: "None", // Important pour le cross-site (sinon, les cookies sont bloqués)
-        },
-    },
+    'strapi::session',
     'strapi::errors',
     {
         name: 'strapi::security',
@@ -27,8 +18,6 @@ module.exports = ({ env }) => [
                     upgradeInsecureRequests: null,
                 },
             },
-            forceHttps: true,
-            trustProxy: 'IP',  // Configuration plus spécifique du proxy
         },
     },
     {

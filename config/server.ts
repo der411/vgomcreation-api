@@ -11,18 +11,9 @@ module.exports = ({ env }) => {
       keys: env.array('APP_KEYS'),
     },
     proxy: true,
-    webhooks: {
-      populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
-    },
     admin: {
       auth: {
         secret: env('ADMIN_JWT_SECRET'),
-      },
-    },
-    settings: {
-      cors: {
-        origin: ['https://www.vgomcreation.fr'],
-        credentials: true, // S'assurer que les cookies sont bien envoyés
       },
     },
   };
