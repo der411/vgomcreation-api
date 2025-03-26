@@ -56,7 +56,7 @@ export default ({ env }) => {
                             // URL où Google redirigera après l'authentification (côté backend)
                             callback: '/api/connect/google/callback',
                             // URL où l'utilisateur sera redirigé après l'authentification (côté frontend)
-                            redirect_uri: 'https://vgomcreation.fr/auth/google/callback',
+                            redirect_uri: 'https://vgomcreation.fr/connect/google/redirect',
                             scope: ['email', 'profile']
                         }
                     }
