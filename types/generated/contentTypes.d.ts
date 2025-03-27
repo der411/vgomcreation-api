@@ -494,34 +494,6 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiNewletterNewletter extends Struct.CollectionTypeSchema {
-  collectionName: 'newletters';
-  info: {
-    displayName: 'Newletter';
-    pluralName: 'newletters';
-    singularName: 'newletter';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    email: Schema.Attribute.Email & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::newletter.newletter'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
   collectionName: 'projets';
   info: {
@@ -1123,7 +1095,6 @@ declare module '@strapi/strapi' {
       'api::blog.blog': ApiBlogBlog;
       'api::commentaire.commentaire': ApiCommentaireCommentaire;
       'api::contact.contact': ApiContactContact;
-      'api::newletter.newletter': ApiNewletterNewletter;
       'api::projet.projet': ApiProjetProjet;
       'api::temoignage.temoignage': ApiTemoignageTemoignage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
