@@ -5,12 +5,13 @@ module.exports = ({ env }) => {
   return {
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
+    proxy: true, // Cela permet à Strapi de comprendre que les requêtes passent par un proxy inverse qui gère SSL
+    trustProxy: true,  // Ceci assure que Strapi sait qu'il faut se fier aux en-têtes Proxy
     url, // Utilisation de la constante url
     client_url, // Ajout explicite de la constante client_url pour l'utiliser dans les templates ou autres
     app: {
       keys: env.array('APP_KEYS'),
     },
-    proxy: true,
     admin: {
       auth: {
         secret: env('ADMIN_JWT_SECRET'),

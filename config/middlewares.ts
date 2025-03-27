@@ -1,5 +1,12 @@
 module.exports = ({ env }) => [
-    'strapi::session',
+    {
+        name: 'strapi::session',
+        config: {
+            secure: true, // Assurez-vous que cette option est définie sur true
+            httpOnly: true,
+            sameSite: 'Strict', // Permet d'envoyer les cookies entre différents domaines
+        },
+    },
     'strapi::errors',
     {
         name: 'strapi::security',
