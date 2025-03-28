@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "factures",
+  "info": {
+    "singularName": "facture",
+    "pluralName": "factures",
+    "displayName": "Facture",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "reference": {
+      "type": "string"
+    },
+    "montant": {
+      "type": "decimal"
+    },
+    "date": {
+      "type": "date"
+    },
+    "statut": {
+      "type": "enumeration",
+      "enum": [
+        "Payée",
+        "En attente"
+      ]
+    },
+    "projets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::projet.projet",
+      "mappedBy": "facture"
+    },
+    "users_permissions_users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "facture"
+    },
+    "paiement": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::paiement.paiement",
+      "mappedBy": "facture"
+    }
+  }
+}

@@ -31,6 +31,8 @@ export default ({ env }) => {
         },
         'users-permissions': {
             config: {
+                jwtSecret: process.env.JWT_SECRET,
+                debug: true,
                 jwt: {
                     expiresIn: '7d',
                 },

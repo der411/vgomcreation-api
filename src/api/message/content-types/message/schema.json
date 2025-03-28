@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "messages",
+  "info": {
+    "singularName": "message",
+    "pluralName": "messages",
+    "displayName": "Message",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sujet": {
+      "type": "string"
+    },
+    "contenu": {
+      "type": "text"
+    },
+    "date": {
+      "type": "date"
+    },
+    "lu": {
+      "type": "boolean"
+    },
+    "expediteur": {
+      "type": "string"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "messages"
+    }
+  }
+}

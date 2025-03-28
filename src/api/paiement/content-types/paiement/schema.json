@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "paiements",
+  "info": {
+    "singularName": "paiement",
+    "pluralName": "paiements",
+    "displayName": "Paiement",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "montant": {
+      "type": "decimal"
+    },
+    "date": {
+      "type": "date"
+    },
+    "statut": {
+      "type": "enumeration",
+      "enum": [
+        "Réussi",
+        "Échoué",
+        "En attente"
+      ]
+    },
+    "methode": {
+      "type": "string"
+    },
+    "facture": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::facture.facture",
+      "inversedBy": "paiement"
+    },
+    "projet": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::projet.projet",
+      "inversedBy": "paiements"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "paiements"
+    }
+  }
+}

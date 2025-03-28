@@ -19,14 +19,6 @@
       "configurable": false,
       "required": true
     },
-    "firstName": {
-      "type": "string",
-      "required": true
-    },
-    "lastName": {
-      "type": "string",
-      "required": true
-    },
     "email": {
       "type": "email",
       "minLength": 6,
@@ -75,6 +67,14 @@
       "inversedBy": "users",
       "configurable": false
     },
+    "firstName": {
+      "type": "string",
+      "required": true
+    },
+    "lastName": {
+      "type": "string",
+      "required": true
+    },
     "commentaires": {
       "type": "relation",
       "relation": "oneToMany",
@@ -91,6 +91,45 @@
       "relation": "manyToMany",
       "target": "api::blog.blog",
       "inversedBy": "viewedBy"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "text"
+    },
+    "postalCode": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "projets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::projet.projet",
+      "mappedBy": "users_permissions_user"
+    },
+    "facture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::facture.facture",
+      "inversedBy": "users_permissions_users"
+    },
+    "messages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::message.message",
+      "mappedBy": "users_permissions_user"
+    },
+    "paiements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::paiement.paiement",
+      "mappedBy": "users_permissions_user"
+    },
+    "city": {
+      "type": "string"
     }
   }
 }

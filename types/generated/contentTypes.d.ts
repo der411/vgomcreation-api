@@ -494,6 +494,121 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFactureFacture extends Struct.CollectionTypeSchema {
+  collectionName: 'factures';
+  info: {
+    description: '';
+    displayName: 'Facture';
+    pluralName: 'factures';
+    singularName: 'facture';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::facture.facture'
+    > &
+      Schema.Attribute.Private;
+    montant: Schema.Attribute.Decimal;
+    paiement: Schema.Attribute.Relation<'oneToOne', 'api::paiement.paiement'>;
+    projets: Schema.Attribute.Relation<'oneToMany', 'api::projet.projet'>;
+    publishedAt: Schema.Attribute.DateTime;
+    reference: Schema.Attribute.String;
+    statut: Schema.Attribute.Enumeration<['Pay\u00E9e', 'En attente']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_users: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiMessageMessage extends Struct.CollectionTypeSchema {
+  collectionName: 'messages';
+  info: {
+    description: '';
+    displayName: 'Message';
+    pluralName: 'messages';
+    singularName: 'message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contenu: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date;
+    expediteur: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::message.message'
+    > &
+      Schema.Attribute.Private;
+    lu: Schema.Attribute.Boolean;
+    publishedAt: Schema.Attribute.DateTime;
+    sujet: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiPaiementPaiement extends Struct.CollectionTypeSchema {
+  collectionName: 'paiements';
+  info: {
+    description: '';
+    displayName: 'Paiement';
+    pluralName: 'paiements';
+    singularName: 'paiement';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date;
+    facture: Schema.Attribute.Relation<'oneToOne', 'api::facture.facture'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::paiement.paiement'
+    > &
+      Schema.Attribute.Private;
+    methode: Schema.Attribute.String;
+    montant: Schema.Attribute.Decimal;
+    projet: Schema.Attribute.Relation<'manyToOne', 'api::projet.projet'>;
+    publishedAt: Schema.Attribute.DateTime;
+    statut: Schema.Attribute.Enumeration<
+      ['R\u00E9ussi', '\u00C9chou\u00E9', 'En attente']
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
   collectionName: 'projets';
   info: {
@@ -511,8 +626,11 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    date_debut: Schema.Attribute.Date;
+    date_fin_prevue: Schema.Attribute.Date;
     dateSold: Schema.Attribute.DateTime;
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
+    facture: Schema.Attribute.Relation<'manyToOne', 'api::facture.facture'>;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -521,24 +639,33 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
       'api::projet.projet'
     > &
       Schema.Attribute.Private;
+    paiements: Schema.Attribute.Relation<'oneToMany', 'api::paiement.paiement'>;
     payment_status: Schema.Attribute.Enumeration<
       ['pending', 'completed', 'failed', 'refunded']
     > &
       Schema.Attribute.DefaultTo<'pending'>;
     price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     priceId: Schema.Attribute.String & Schema.Attribute.Unique;
+    progression: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     purchase_metadata: Schema.Attribute.JSON & Schema.Attribute.Private;
     receiptUrl: Schema.Attribute.String;
     sales_count: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<0>;
+    statut: Schema.Attribute.Enumeration<
+      ['En d\u00E9veloppement', 'En attente', 'Termin\u00E9']
+    >;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     transaction_id: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     url_projet: Schema.Attribute.String & Schema.Attribute.Unique;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     vendable: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -1033,13 +1160,16 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
+    address: Schema.Attribute.Text;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    city: Schema.Attribute.String;
     commentaires: Schema.Attribute.Relation<
       'oneToMany',
       'api::commentaire.commentaire'
     >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    country: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1048,6 +1178,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    facture: Schema.Attribute.Relation<'manyToOne', 'api::facture.facture'>;
     firstName: Schema.Attribute.String & Schema.Attribute.Required;
     lastName: Schema.Attribute.String & Schema.Attribute.Required;
     likedBlogs: Schema.Attribute.Relation<'manyToMany', 'api::blog.blog'>;
@@ -1057,11 +1188,16 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    messages: Schema.Attribute.Relation<'oneToMany', 'api::message.message'>;
+    paiements: Schema.Attribute.Relation<'oneToMany', 'api::paiement.paiement'>;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 8;
       }>;
+    phone: Schema.Attribute.String;
+    postalCode: Schema.Attribute.String;
+    projets: Schema.Attribute.Relation<'oneToMany', 'api::projet.projet'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1095,6 +1231,9 @@ declare module '@strapi/strapi' {
       'api::blog.blog': ApiBlogBlog;
       'api::commentaire.commentaire': ApiCommentaireCommentaire;
       'api::contact.contact': ApiContactContact;
+      'api::facture.facture': ApiFactureFacture;
+      'api::message.message': ApiMessageMessage;
+      'api::paiement.paiement': ApiPaiementPaiement;
       'api::projet.projet': ApiProjetProjet;
       'api::temoignage.temoignage': ApiTemoignageTemoignage;
       'plugin::content-releases.release': PluginContentReleasesRelease;

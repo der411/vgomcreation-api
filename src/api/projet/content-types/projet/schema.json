@@ -92,6 +92,41 @@
       "type": "integer",
       "default": 0,
       "required": true
+    },
+    "statut": {
+      "type": "enumeration",
+      "enum": [
+        "En développement",
+        "En attente",
+        "Terminé"
+      ]
+    },
+    "progression": {
+      "type": "decimal"
+    },
+    "date_debut": {
+      "type": "date"
+    },
+    "date_fin_prevue": {
+      "type": "date"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "projets"
+    },
+    "facture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::facture.facture",
+      "inversedBy": "projets"
+    },
+    "paiements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::paiement.paiement",
+      "mappedBy": "projet"
     }
   }
 }
