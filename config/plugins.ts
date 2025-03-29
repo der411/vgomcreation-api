@@ -49,6 +49,15 @@ export default ({ env }) => {
                         defaultReplyTo: 'postmaster@mg.vgomcreation.fr',
                     },
                 },
+                providers: {
+                    google: {
+                        enabled: true,
+                        config: {
+                            callback: `${env('PUBLIC_URL', 'https://vgomcreation-api.onrender.com')}/api/connect/google/callback`,
+                            redirect_uri: `${env('CLIENT_URL', 'https://vgomcreation.fr')}/connect/google/redirect`,
+                        },
+                    },
+                },
             },
         },
     }
