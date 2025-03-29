@@ -66,7 +66,7 @@ module.exports = ({ env }) => [
         config: {
             rolling: true,
             renew: true,
-            secure: true, // Important en production
+            secure: false, // Important en production
             sameSite: 'none'
         },
     },
