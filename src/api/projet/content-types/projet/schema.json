@@ -127,6 +127,21 @@
       "relation": "oneToMany",
       "target": "api::paiement.paiement",
       "mappedBy": "projet"
+    },
+    "categorie": {
+      "type": "enumeration",
+      "enum": [
+        "E-commerce",
+        "Education",
+        "Restauration",
+        "Finance",
+        "Santé",
+        "Médias",
+        "Portfolio",
+        "Blog",
+        "Autre"
+      ],
+      "default": "Autre"
     }
   }
 }

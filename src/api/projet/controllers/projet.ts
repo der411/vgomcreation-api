@@ -326,5 +326,33 @@ export default factories.createCoreController('api::projet.projet', ({ strapi })
         }
 
         return await super.update(ctx);
+    },
+
+    getPaymentStatus: async (ctx) => {
+        try {
+            const { sessionId } = ctx.params;
+
+            if (!sessionId) {
+                return ctx.badRequest('Session ID manquant');
+            }
+
+            // Récupérer le statut depuis Stripe
+            const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+            const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+            // Vérifier si le projet a été mis à jour
+            const projet = await strapi.db.query('api::projet.projet').findOne({
+                where: { transaction_id: sessionId },
+            });
+
+            return {
+                status: session.payment_status,
+                projectId: projet?.id || null,
+                success: session.payment_status === 'paid',
+            };
+        } catch (err) {
+            console.error('Erreur de vérification de paiement:', err);
+            return ctx.internalServerError('Erreur lors de la vérification du paiement');
+        }
     }
 }));

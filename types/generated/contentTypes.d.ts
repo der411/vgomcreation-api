@@ -623,6 +623,20 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
   attributes: {
     buyer_email: Schema.Attribute.Email & Schema.Attribute.Private;
     buyer_name: Schema.Attribute.String & Schema.Attribute.Private;
+    categorie: Schema.Attribute.Enumeration<
+      [
+        'E-commerce',
+        'Education',
+        'Restauration',
+        'Finance',
+        'Sant\u00E9',
+        'M\u00E9dias',
+        'Portfolio',
+        'Blog',
+        'Autre',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'Autre'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

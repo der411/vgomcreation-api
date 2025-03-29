@@ -25,6 +25,14 @@ export default {
             config: {
                 auth: false,
             }
+        },
+        {
+            method: 'GET',
+            path: '/api/projets/payment-status/:sessionId',
+            handler: 'projet.getPaymentStatus',
+            config: {
+                auth: false // Permet la vérification sans être connecté
+            },
         }
     ]
 };
