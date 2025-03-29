@@ -633,6 +633,8 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
         'M\u00E9dias',
         'Portfolio',
         'Blog',
+        'Vitrine',
+        'Immobilier',
         'Autre',
       ]
     > &

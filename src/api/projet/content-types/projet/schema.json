@@ -139,6 +139,8 @@
         "Médias",
         "Portfolio",
         "Blog",
+        "Vitrine",
+        "Immobilier",
         "Autre"
       ],
       "default": "Autre"
