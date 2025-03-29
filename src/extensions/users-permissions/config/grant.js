@@ -1,4 +1,4 @@
-/*
+
 module.exports = {
     defaults: {
         transport: 'state', // transport des données via l'état
@@ -12,4 +12,4 @@ module.exports = {
         response: ['tokens', 'profile'], // Obtenir les tokens et le profil
         callback: '/api/connect/google/callback', // Définir l'URL de callback
     },
-};*/
+};

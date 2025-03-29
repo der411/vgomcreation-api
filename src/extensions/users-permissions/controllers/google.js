@@ -1,5 +1,5 @@
 
-/*module.exports = {
+module.exports = {
     async connect(ctx) {
         try {
             // Redirige vers l'URL de connexion Google via Grant
@@ -46,4 +46,3 @@
         }
     },
 };
-*/

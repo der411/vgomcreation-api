@@ -62,7 +62,7 @@ module.exports = (plugin) => {
         }
     };
 
-/*plugin.controllers.auth.googleLogin = async (ctx) => {
+plugin.controllers.auth.googleLogin = async (ctx) => {
     const { idToken } = ctx.request.body;
 
     try {
@@ -126,8 +126,8 @@ plugin.controllers.auth.googleCallback = async (ctx) => {
         });
 
         // Rediriger vers votre frontend avec le token JWT
-        const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
-        return ctx.redirect(`${frontendURL}/auth-callback?jwt=${jwt}`);
+        const clientURL = process.env.CLIENT_URL || 'http://localhost:3000';
+        return ctx.redirect(`${clientURL}/connect/google/redirect?access_token=${access_token}`);
 
     } catch (error) {
         ctx.throw(400, error.message);
@@ -146,7 +146,7 @@ plugin.controllers.auth.googleAuth = async (ctx) => {
     } catch (error) {
         ctx.throw(400, error.message);
     }
-};*/
+};
 
 return plugin;
 };
