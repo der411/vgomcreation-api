@@ -53,8 +53,11 @@ export default ({ env }) => {
                     google: {
                         enabled: true,
                         config: {
+                            client_id: env('GOOGLE_CLIENT_ID'),
+                            client_secret: env('GOOGLE_CLIENT_SECRET'),
                             callback: `${env('PUBLIC_URL', 'https://vgomcreation-api.onrender.com')}/api/connect/google/callback`,
                             redirect_uri: `${env('CLIENT_URL', 'https://vgomcreation.fr')}/connect/google/redirect`,
+                            scope: ['email', 'profile'],
                         },
                     },
                 },
