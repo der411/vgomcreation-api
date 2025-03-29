@@ -64,91 +64,91 @@ module.exports = (plugin) => {
         }
     };
 
-    plugin.controllers.auth.googleLogin = async (ctx) => {
-        const { idToken } = ctx.request.body;
+/*plugin.controllers.auth.googleLogin = async (ctx) => {
+    const { idToken } = ctx.request.body;
 
-        try {
-            if (!idToken) {
-                return ctx.badRequest("Missing idToken");
-            }
-
-            // Vérifie l'authenticité du token Google
-            const ticket = await client.verifyIdToken({
-                idToken,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            });
-
-            const payload = ticket.getPayload();
-            const email = payload.email;
-            const username = payload.name || email.split('@')[0];
-
-            // Vérifie si l'utilisateur existe déjà
-            let user = await strapi.query("plugin::users-permissions.user").findOne({
-                where: { email },
-            });
-
-            if (!user) {
-                // Crée un nouvel utilisateur Google
-                user = await strapi.query("plugin::users-permissions.user").create({
-                    data: {
-                        email,
-                        username,
-                        provider: 'google',
-                        confirmed: true, // Google vérifie déjà l'email
-                        password: Math.random().toString(36).slice(-8), // Générer un mot de passe aléatoire
-                    },
-                });
-            }
-
-            // Génère un JWT pour l'utilisateur
-            const token = strapi.plugins['users-permissions'].services.jwt.issue({ id: user.id });
-
-            ctx.send({
-                jwt: token,
-                user,
-            });
-        } catch (err) {
-            console.error("Google Login Error:", err.message);
-            ctx.badRequest("Google authentication failed");
+    try {
+        if (!idToken) {
+            return ctx.badRequest("Missing idToken");
         }
-    };
 
-    plugin.controllers.auth.googleCallback = async (ctx) => {
-        const provider = 'google';
+        // Vérifie l'authenticité du token Google
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
 
-        try {
-            const params = ctx.query;
-            const user = await strapi.plugins['users-permissions'].services.providers.callback(
-                provider,
-                params
-            );
+        const payload = ticket.getPayload();
+        const email = payload.email;
+        const username = payload.name || email.split('@')[0];
 
-            const jwt = strapi.plugins['users-permissions'].services.jwt.issue({
-                id: user.id,
+        // Vérifie si l'utilisateur existe déjà
+        let user = await strapi.query("plugin::users-permissions.user").findOne({
+            where: { email },
+        });
+
+        if (!user) {
+            // Crée un nouvel utilisateur Google
+            user = await strapi.query("plugin::users-permissions.user").create({
+                data: {
+                    email,
+                    username,
+                    provider: 'google',
+                    confirmed: true, // Google vérifie déjà l'email
+                    password: Math.random().toString(36).slice(-8), // Générer un mot de passe aléatoire
+                },
             });
-
-            // Rediriger vers votre frontend avec le token JWT
-            const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
-            return ctx.redirect(`${frontendURL}/auth-callback?jwt=${jwt}`);
-
-        } catch (error) {
-            ctx.throw(400, error.message);
         }
-    };
 
-    plugin.controllers.auth.googleAuth = async (ctx) => {
-        const { query } = ctx;
-        const provider = 'google';
+        // Génère un JWT pour l'utilisateur
+        const token = strapi.plugins['users-permissions'].services.jwt.issue({ id: user.id });
 
-        try {
-            await strapi.plugins['users-permissions'].services.providers.connect(
-                provider,
-                query
-            );
-        } catch (error) {
-            ctx.throw(400, error.message);
-        }
-    };
+        ctx.send({
+            jwt: token,
+            user,
+        });
+    } catch (err) {
+        console.error("Google Login Error:", err.message);
+        ctx.badRequest("Google authentication failed");
+    }
+};
 
-    return plugin;
+plugin.controllers.auth.googleCallback = async (ctx) => {
+    const provider = 'google';
+
+    try {
+        const params = ctx.query;
+        const user = await strapi.plugins['users-permissions'].services.providers.callback(
+            provider,
+            params
+        );
+
+        const jwt = strapi.plugins['users-permissions'].services.jwt.issue({
+            id: user.id,
+        });
+
+        // Rediriger vers votre frontend avec le token JWT
+        const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+        return ctx.redirect(`${frontendURL}/auth-callback?jwt=${jwt}`);
+
+    } catch (error) {
+        ctx.throw(400, error.message);
+    }
+};
+
+plugin.controllers.auth.googleAuth = async (ctx) => {
+    const { query } = ctx;
+    const provider = 'google';
+
+    try {
+        await strapi.plugins['users-permissions'].services.providers.connect(
+            provider,
+            query
+        );
+    } catch (error) {
+        ctx.throw(400, error.message);
+    }
+};*/
+
+return plugin;
 };
