@@ -1,21 +1,9 @@
 module.exports = ({ env }) => [
-    {
-        name: 'strapi::session',
-        config: {
-            rolling: true,
-            renew: true,
-            secure: true, // Important en production
-            sameSite: 'none'
-        },
-    },
+    'strapi::logger',
     'strapi::errors',
     {
         name: 'strapi::security',
         config: {
-            cors: {
-                origin: ["https://www.vgomcreation.fr"],
-                credentials: true, // Permet d'envoyer les cookies cross-origin
-            },
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
@@ -39,7 +27,6 @@ module.exports = ({ env }) => [
                 'https://www.vgomcreation.fr',
                 'http://localhost:3000',
                 'https://vgomcreation-api.onrender.com',
-                'https://accounts.google.com'
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
             headers: [
@@ -55,7 +42,6 @@ module.exports = ({ env }) => [
         },
     },
     'strapi::poweredBy',
-    'strapi::logger',
     'strapi::query',
     {
         name: 'strapi::body',
@@ -73,6 +59,15 @@ module.exports = ({ env }) => [
             },
             rawBody: true,
             includeUnparsed: true
+        },
+    },
+    {
+        name: 'strapi::session',
+        config: {
+            rolling: true,
+            renew: true,
+            secure: true, // Important en production
+            sameSite: 'none'
         },
     },
     'strapi::favicon',
