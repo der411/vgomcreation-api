@@ -25,6 +25,10 @@ module.exports = ({ env }) => [
                     upgradeInsecureRequests: null,
                 },
             },
+            session: {
+                enabled: true,
+                secure: true,
+            },
         },
     },
     {

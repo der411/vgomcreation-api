@@ -1,4 +1,4 @@
-module.exports = {
+/*module.exports = {
     async googleLogin(ctx) {
         try {
             const { response } = ctx.session.grant;
@@ -32,4 +32,4 @@ module.exports = {
             return ctx.internalServerError('Something went wrong');
         }
     },
-};
+};*/

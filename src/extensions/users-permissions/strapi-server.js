@@ -1,5 +1,3 @@
-
-
 module.exports = (plugin) => {
 
     const defaultAuthController = plugin.controllers.auth;
