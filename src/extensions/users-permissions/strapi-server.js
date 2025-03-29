@@ -127,10 +127,10 @@ module.exports = (plugin) => {
                 id: user.id,
             });
 
-            ctx.send({
-                jwt,
-                user: user
-            });
+            // Rediriger vers votre frontend avec le token JWT
+            const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+            return ctx.redirect(`${frontendURL}/auth-callback?jwt=${jwt}`);
+
         } catch (error) {
             ctx.throw(400, error.message);
         }
