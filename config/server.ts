@@ -5,8 +5,7 @@ module.exports = ({ env }) => {
   return {
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
-    proxy: true,
-    trustProxy: true,
+    proxy: env.bool('PROXY', true),
     url,
     client_url,
     app: {
