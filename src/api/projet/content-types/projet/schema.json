@@ -144,6 +144,16 @@
         "Autre"
       ],
       "default": "Autre"
+    },
+    "likes": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "views": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
     }
   }
 }

@@ -649,6 +649,14 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     facture: Schema.Attribute.Relation<'manyToOne', 'api::facture.facture'>;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.Required;
+    likes: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -685,6 +693,14 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     vendable: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
+    views: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
   };
 }
 
