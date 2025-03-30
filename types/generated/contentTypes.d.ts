@@ -693,14 +693,6 @@ export interface ApiProjetProjet extends Struct.CollectionTypeSchema {
     vendable: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
-    views: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
   };
 }
 

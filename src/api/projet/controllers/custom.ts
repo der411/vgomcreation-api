@@ -1,69 +1,93 @@
+'use strict';
+
 /**
- * Contrôleur personnalisé pour les projets avec méthodes like et views
+ * Contrôleur personnalisé pour les projets
  */
-export default {
-    // Gérer les likes
-    like: async (ctx) => {
+module.exports = {
+    /**
+     * Incrémente le compteur de likes d'un projet
+     */
+    async incrementLikes(ctx) {
         const { id } = ctx.params;
-        const { action } = ctx.request.body || {};
 
         try {
             // Récupérer le projet
-            const projet = await strapi.entityService.findOne('api::projet.projet', id);
+            const projet = await strapi.db.query('api::projet.projet').findOne({
+                where: { id }
+            });
 
             if (!projet) {
                 return ctx.notFound('Projet non trouvé');
             }
 
-            // Incrémenter ou décrémenter le nombre de likes
-            const likesCount = action === 'unlike'
-                ? Math.max(0, (projet.likes || 0) - 1)
-                : (projet.likes || 0) + 1;
-
-            // Mettre à jour le projet
-            const updatedProjet = await strapi.entityService.update('api::projet.projet', id, {
-                data: {
-                    likes: likesCount
-                }
+            // Incrémenter le compteur de likes
+            const updatedProjet = await strapi.db.query('api::projet.projet').update({
+                where: { id },
+                data: { likes: (projet.likes || 0) + 1 }
             });
 
-            return ctx.body = {
+            return ctx.send({
                 success: true,
                 likes: updatedProjet.likes
-            };
+            });
         } catch (error) {
-            strapi.log.error('Erreur lors de la mise à jour des likes:', error);
+            strapi.log.error('Erreur lors de l\'incrémentation des likes:', error);
             return ctx.throw(500, 'Une erreur est survenue lors de la mise à jour des likes');
         }
     },
 
-    // Gérer les vues
-    views: async (ctx) => {
+    /**
+     * Décrémente le compteur de likes d'un projet
+     */
+    async decrementLikes(ctx) {
         const { id } = ctx.params;
 
         try {
             // Récupérer le projet
-            const projet = await strapi.entityService.findOne('api::projet.projet', id);
+            const projet = await strapi.db.query('api::projet.projet').findOne({
+                where: { id }
+            });
 
             if (!projet) {
                 return ctx.notFound('Projet non trouvé');
             }
 
-            // Incrémenter les vues
-            const views = (projet.views || 0) + 1;
-
-            // Mettre à jour le projet
-            const updatedProjet = await strapi.entityService.update('api::projet.projet', id, {
-                data: { views }
+            // Décrémenter le compteur de likes, mais pas en dessous de 0
+            const updatedProjet = await strapi.db.query('api::projet.projet').update({
+                where: { id },
+                data: { likes: Math.max(0, (projet.likes || 0) - 1) }
             });
 
-            return ctx.body = {
+            return ctx.send({
                 success: true,
-                views: updatedProjet.views
-            };
+                likes: updatedProjet.likes
+            });
         } catch (error) {
-            strapi.log.error('Erreur lors de l\'incrémentation des vues:', error);
-            return ctx.throw(500, 'Une erreur est survenue lors de l\'incrémentation des vues');
+            strapi.log.error('Erreur lors de la décrémentation des likes:', error);
+            return ctx.throw(500, 'Une erreur est survenue lors de la mise à jour des likes');
+        }
+    },
+
+    /**
+     * Méthode spécifique pour gérer les likes selon l'action
+     */
+    async manageLike(ctx) {
+        const { id } = ctx.params;
+        const { action } = ctx.request.body || {};
+
+        strapi.log.info(`Action like reçue pour le projet ${id}: ${action}`);
+
+        try {
+            if (action === 'like') {
+                return await this.incrementLikes(ctx);
+            } else if (action === 'unlike') {
+                return await this.decrementLikes(ctx);
+            } else {
+                return ctx.badRequest('Action non reconnue. Utilisez "like" ou "unlike"');
+            }
+        } catch (error) {
+            strapi.log.error('Erreur lors de la gestion du like:', error);
+            return ctx.throw(500, 'Une erreur est survenue lors de la gestion du like');
         }
     }
 };
