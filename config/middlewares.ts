@@ -7,7 +7,7 @@ module.exports = ({ env }) => [
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
-                    'connect-src': ["'self'", "https://accounts.google.com", 'https:'],
+                    'connect-src': ["'self'", "https://accounts.google.com", env('CLIENT_URL', 'http://localhost:3000'), env('REACT_APP_API_URL', 'http://localhost:1337'), 'https:'],
                     'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
                     'frame-src': ["'self'", "https://accounts.google.com"],
                     'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', 'res.cloudinary.com'],
@@ -16,7 +16,7 @@ module.exports = ({ env }) => [
             },
             session: {
                 enabled: true,
-                secure: true,
+                secure: env('NODE_ENV') === 'production',
             },
         },
     },
@@ -25,8 +25,9 @@ module.exports = ({ env }) => [
         config: {
             origin: [
                 'https://www.vgomcreation.fr',
-                'http://localhost:3000',
+                env('CLIENT_URL', 'http://localhost:3000'),
                 'https://vgomcreation-api.onrender.com',
+                env('REACT_APP_API_URL', 'http://localhost:1337'),
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
             headers: [
@@ -66,7 +67,13 @@ module.exports = ({ env }) => [
         config: {
             rolling: true,
             renew: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            httpOnly: true,
+            secure: env('NODE_ENV') === 'production',
+            maxAge: 86400000, // 24 heures comme dans votre configuration de session
+            keys: [env('APP_KEYS', '').split(',')[0]], // utilise la première clé de APP_KEYS
+            overwrite: true,
+            signed: true,
         },
     },
     'strapi::favicon',
