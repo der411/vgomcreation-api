@@ -31,6 +31,7 @@ export default ({ env }) => {
         },
         'users-permissions': {
             config: {
+                redirect: 'https://vgomcreation.fr/auth/callback',
                 jwtSecret: process.env.JWT_SECRET,
                 debug: true,
                 jwt: {

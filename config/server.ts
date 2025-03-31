@@ -5,8 +5,9 @@ module.exports = ({ env }) => {
   return {
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
-    proxy: true, // Cela permet à Strapi de comprendre que les requêtes passent par un proxy inverse qui gère SSL
-    trustProxy: true,  // Ceci assure que Strapi sait qu'il faut se fier aux en-têtes Proxy
+    proxy: {
+      koa: true // Ceci remplace l'ancienne option "proxy: true"
+    },
     url, // Utilisation de la constante url
     client_url, // Ajout explicite de la constante client_url pour l'utiliser dans les templates ou autres
     app: {
