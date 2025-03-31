@@ -1,4 +1,4 @@
-// ./src/extensions/users-permissions/controllers/user.js
+
 module.exports = {
     async googleLogin(ctx) {
         try {
@@ -34,4 +34,37 @@ module.exports = {
             return ctx.internalServerError('Something went wrong');
         }
     },
+
+    async updateMe(ctx) {
+        if (!ctx.state.user) {
+            return ctx.unauthorized();
+        }
+
+        const { termsAccepted } = ctx.request.body;
+
+        try {
+            const updatedUser = await strapi.entityService.update(
+                'plugin::users-permissions.user',
+                ctx.state.user.id,
+                { data: { termsAccepted } }
+            );
+
+            return ctx.send({
+                success: true,
+                message: 'Conditions acceptées avec succès',
+                user: sanitizeUser(updatedUser)
+            });
+        } catch (error) {
+            return ctx.badRequest(null, error.message);
+        }
+    }
 };
+
+// Fonction utilitaire pour nettoyer les données utilisateur
+const sanitizeUser = (user) => {
+    const {
+        password, resetPasswordToken, confirmationToken, ...sanitizedUser
+    } = user;
+    return sanitizedUser;
+};
+

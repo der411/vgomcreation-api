@@ -130,6 +130,10 @@
     },
     "city": {
       "type": "string"
+    },
+    "termsAccepted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
