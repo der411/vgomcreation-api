@@ -28,6 +28,14 @@ module.exports = {
             handler: 'user.updateMe',
             config: { auth: { strategy: 'api-token' } }
         },
+        {
+            method: 'POST',
+            path: '/auth/facebook-login',
+            handler: 'custom-auth.facebookLogin',
+            config: {
+                auth: false
+            }
+        },
 
         // Route pour Facebook (automatiquement gérée par le plugin user-permissions)
         // Le controller auth.js étend la route existante, donc pas besoin de la redéfinir ici
