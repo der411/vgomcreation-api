@@ -61,6 +61,15 @@ export default ({ env }) => {
                             scope: ['email', 'profile'],
                         },
                     },
+                    facebook: {
+                        enabled: true,
+                        config: {
+                            clientId: env('FACEBOOK_APP_ID'),
+                            clientSecret: env('FACEBOOK_APP_SECRET'),
+                            callback: `${env('PUBLIC_URL', 'https://vgomcreation-api.onrender.com')}/api/connect/facebook/callback`,
+                            scope: ['email', 'public_profile']
+                        }
+                    },
                 },
             },
         },
