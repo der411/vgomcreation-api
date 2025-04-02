@@ -1,7 +1,8 @@
-const facebookController = require('./controllers/facebook');
-const facebookRoutes = require('./routes/facebook');
+'use strict';
 
 module.exports = (plugin) => {
+
+    const customFacebookController = require('./controllers/custom-facebook');
 
     const defaultAuthController = plugin.controllers.auth;
     plugin.controllers.auth = {
@@ -151,11 +152,22 @@ plugin.controllers.auth.googleAuth = async (ctx) => {
     }
 };
 
-    // Ajout du contrôleur Facebook comme un nouveau contrôleur séparé
-    plugin.controllers.facebook = facebookController;
+    plugin.controllers.customFacebook = customFacebookController({ strapi });
 
-    // Ajout des routes Facebook
-    plugin.routes['content-api'].routes.push(...facebookRoutes);
+    plugin.routes['content-api'].routes.push({
+        method: 'POST',
+        path: '/auth/facebook-login',
+        handler: 'custom-facebook.facebookLogin',
+        config: {
+            prefix: '',
+            auth: false,
+            description: "Authentification avec Facebook",
+            tag: {
+                plugin: 'users-permissions',
+                name: 'Auth'
+            }
+        }
+    });
 
 return plugin;
 };
