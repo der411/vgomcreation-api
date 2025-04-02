@@ -1,35 +1,99 @@
-/*module.exports = {
-    async googleLogin(ctx) {
+'use strict';
+
+/**
+ * Custom auth controller for handling social login
+ */
+
+module.exports = {
+    /**
+     * Facebook login handler
+     */
+    async facebookLogin(ctx) {
         try {
-            const { response } = ctx.session.grant;
-            if (!response) return ctx.badRequest('No response from Google');
+            const { facebook_id, email, name, picture } = ctx.request.body;
 
-            const { access_token, profile } = response;
+            if (!facebook_id || !email) {
+                return ctx.badRequest('ID Facebook et email requis');
+            }
 
-            // Vérifier si l'utilisateur existe déjà
+            strapi.log.info('Tentative de connexion Facebook:', { facebook_id, email });
+
+            // Rechercher l'utilisateur par facebook_id ou par email
             let user = await strapi.query('plugin::users-permissions.user').findOne({
-                where: { email: profile.email },
+                where: {
+                    $or: [
+                        { facebook_id },
+                        { email }
+                    ]
+                }
             });
 
-            // Créer l'utilisateur s'il n'existe pas
             if (!user) {
-                user = await strapi.plugins['users-permissions'].services.user.add({
-                    username: profile.name,
-                    email: profile.email,
-                    provider: 'google',
-                    password: Math.random().toString(36).slice(-8),
+                strapi.log.info('Création d\'un nouvel utilisateur Facebook:', email);
+
+                // Récupérer le rôle par défaut
+                const pluginStore = await strapi.store({
+                    type: 'plugin',
+                    name: 'users-permissions',
+                });
+
+                const settings = await pluginStore.get({ key: 'advanced' });
+                const defaultRole = await strapi.query('plugin::users-permissions.role')
+                    .findOne({ where: { type: settings.default_role } });
+
+                if (!defaultRole) {
+                    return ctx.badRequest('Rôle par défaut non trouvé');
+                }
+
+                // Créer un nouvel utilisateur Facebook
+                const nameParts = name.split(' ');
+                const firstname = nameParts[0] || '';
+                const lastname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+                user = await strapi.query('plugin::users-permissions.user').create({
+                    data: {
+                        username: email,
+                        email,
+                        provider: 'facebook',
+                        facebook_id,
+                        confirmed: true,
+                        blocked: false,
+                        role: defaultRole.id,
+                        firstname,
+                        lastname,
+                        avatar: picture,
+                        password: Math.random().toString(36).slice(-8), // Mot de passe aléatoire
+                    }
+                });
+            } else if (!user.facebook_id) {
+                strapi.log.info('Liaison du compte existant avec Facebook:', email);
+
+                // Mettre à jour l'utilisateur existant avec l'ID Facebook
+                user = await strapi.query('plugin::users-permissions.user').update({
+                    where: { id: user.id },
+                    data: {
+                        facebook_id,
+                        provider: 'facebook',
+                        confirmed: true // Marquer comme confirmé car confirmé par Facebook
+                    }
                 });
             }
 
-            // Générer un token JWT
-            const token = strapi.plugins['users-permissions'].services.jwt.issue({
+            // Générer un JWT pour l'utilisateur
+            const jwt = strapi.plugins['users-permissions'].services.jwt.issue({
                 id: user.id,
             });
 
-            return ctx.send({ jwt: token, user });
+            // Nettoyer les données sensibles
+            const sanitizedUser = await strapi.plugins['users-permissions'].services.user.sanitizeUser(user);
+
+            strapi.log.info('Authentification Facebook réussie pour:', email);
+
+            // Renvoyer le JWT et les informations utilisateur
+            return { jwt, user: sanitizedUser };
         } catch (error) {
-            console.error(error);
-            return ctx.internalServerError('Something went wrong');
+            strapi.log.error('Erreur authentification Facebook:', error);
+            return ctx.internalServerError('Une erreur est survenue');
         }
-    },
-};*/
+    }
+};
