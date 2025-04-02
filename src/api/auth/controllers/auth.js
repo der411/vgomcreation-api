@@ -52,7 +52,7 @@ module.exports = {
 
                 user = await strapi.query('plugin::users-permissions.user').create({
                     data: {
-                        username: email,
+                        username: `fb_${facebook_id}`,
                         email,
                         provider: 'facebook',
                         facebook_id,
@@ -62,7 +62,9 @@ module.exports = {
                         firstname,
                         lastname,
                         avatar: picture,
-                        password: Math.random().toString(36).slice(-8), // Mot de passe aléatoire
+                        password: await strapi.plugins['users-permissions'].services.user.hashPassword(
+                            Math.random().toString(36).slice(-8)
+                        ),
                     }
                 });
             } else if (!user.facebook_id) {
@@ -73,7 +75,9 @@ module.exports = {
                     where: { id: user.id },
                     data: {
                         facebook_id,
-                        provider: 'facebook',
+                        // Conserver le provider original si c'est un compte standard
+                        // ou mettre à jour si c'est un autre provider social
+                        provider: user.provider === 'local' ? user.provider : 'facebook',
                         confirmed: true // Marquer comme confirmé car confirmé par Facebook
                     }
                 });
@@ -84,13 +88,19 @@ module.exports = {
                 id: user.id,
             });
 
+            // Récupérer l'utilisateur avec ses relations
+            const populatedUser = await strapi.query('plugin::users-permissions.user').findOne({
+                where: { id: user.id },
+                populate: ['role', 'avatar_url']
+            });
+
             // Nettoyer les données sensibles
-            const sanitizedUser = await strapi.plugins['users-permissions'].services.user.sanitizeUser(user);
+            const sanitizedUser = await strapi.plugins['users-permissions'].services.user.sanitizeUser(populatedUser);
 
             strapi.log.info('Authentification Facebook réussie pour:', email);
 
             // Renvoyer le JWT et les informations utilisateur
-            return { jwt, user: sanitizedUser };
+            return ctx.send({ jwt, user: sanitizedUser });
         } catch (error) {
             strapi.log.error('Erreur authentification Facebook:', error);
             return ctx.internalServerError('Une erreur est survenue');

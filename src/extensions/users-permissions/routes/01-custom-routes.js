@@ -19,8 +19,6 @@ module.exports = {
             handler: 'google-auth.callback',
             config: { auth: false }
         },
-
-        // Route pour accepter les termes
         {
             method: 'PUT',
             path: '/users/me/terms',
@@ -30,10 +28,15 @@ module.exports = {
         {
             method: 'POST',
             path: '/auth/facebook-login',
-            handler: 'facebook.login',
+            handler: 'custom-facebook.facebookLogin',
             config: {
                 prefix: '',
                 auth: false,
+                description: "Authentification avec Facebook",
+                tag: {
+                    plugin: 'users-permissions',
+                    name: 'Auth'
+                }
             }
         }
     ]

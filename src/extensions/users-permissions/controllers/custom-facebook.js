@@ -1,7 +1,11 @@
 'use strict';
 
+/**
+ * Controller personnalisé pour gérer l'authentification Facebook
+ * et résoudre le problème de "Email is already taken"
+ */
 module.exports = ({ strapi }) => ({
-    async login(ctx) {
+    async facebookLogin(ctx) {
         try {
             const { facebook_id, email, name, picture } = ctx.request.body;
 
@@ -11,24 +15,20 @@ module.exports = ({ strapi }) => ({
 
             strapi.log.info('Tentative de connexion Facebook:', { facebook_id, email });
 
-            // Rechercher l'utilisateur par email ou facebook_id
+            // Rechercher l'utilisateur par facebook_id ou par email
             let user = await strapi.query('plugin::users-permissions.user').findOne({
-                where: { email }
+                where: {
+                    $or: [
+                        { facebook_id },
+                        { email }
+                    ]
+                }
             });
 
-            if (user) {
-                // L'utilisateur existe déjà, mettre à jour ses infos Facebook si nécessaire
-                if (!user.facebook_id) {
-                    user = await strapi.query('plugin::users-permissions.user').update({
-                        where: { id: user.id },
-                        data: {
-                            facebook_id,
-                            confirmed: true
-                        }
-                    });
-                }
-            } else {
-                // Créer un nouvel utilisateur
+            if (!user) {
+                strapi.log.info('Création d\'un nouvel utilisateur Facebook:', email);
+
+                // Récupérer le rôle par défaut
                 const pluginStore = await strapi.store({
                     type: 'plugin',
                     name: 'users-permissions',
@@ -38,13 +38,18 @@ module.exports = ({ strapi }) => ({
                 const defaultRole = await strapi.query('plugin::users-permissions.role')
                     .findOne({ where: { type: settings.default_role } });
 
+                if (!defaultRole) {
+                    return ctx.badRequest('Rôle par défaut non trouvé');
+                }
+
+                // Créer un nouvel utilisateur Facebook
                 const nameParts = name.split(' ');
                 const firstname = nameParts[0] || '';
                 const lastname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
                 user = await strapi.query('plugin::users-permissions.user').create({
                     data: {
-                        username: email,
+                        username: `fb_${facebook_id.substring(0, 10)}`,
                         email,
                         provider: 'facebook',
                         facebook_id,
@@ -54,29 +59,48 @@ module.exports = ({ strapi }) => ({
                         firstname,
                         lastname,
                         avatar: picture,
-                        password: Math.random().toString(36).slice(-8)
+                        password: await strapi.plugins['users-permissions'].services.user.hashPassword(
+                            Math.random().toString(36).slice(-8)
+                        ),
+                    }
+                });
+            } else if (!user.facebook_id) {
+                strapi.log.info('Liaison du compte existant avec Facebook:', email);
+
+                // Mettre à jour l'utilisateur existant avec l'ID Facebook
+                user = await strapi.query('plugin::users-permissions.user').update({
+                    where: { id: user.id },
+                    data: {
+                        facebook_id,
+                        // Nous maintenons le provider original si c'est un compte local
+                        // sinon nous le mettons à jour vers facebook
+                        provider: user.provider === 'local' ? user.provider : 'facebook',
+                        confirmed: true
                     }
                 });
             }
 
-            // Générer le JWT
+            // Générer un JWT pour l'utilisateur
             const jwt = strapi.plugins['users-permissions'].services.jwt.issue({
                 id: user.id,
             });
 
-            // Nettoyer les données sensibles
-            const sanitizedUser = await strapi.plugins['users-permissions'].services.user.sanitizeUser(user);
-
-            strapi.log.info('Authentification Facebook réussie:', user.email);
-
-            // Renvoyer JWT et infos utilisateur
-            return ctx.send({
-                jwt,
-                user: sanitizedUser
+            // Récupérer l'utilisateur avec ses relations
+            const populatedUser = await strapi.query('plugin::users-permissions.user').findOne({
+                where: { id: user.id },
+                populate: ['role'] // Ajoutez d'autres relations si nécessaire
             });
+
+            // Nettoyer les données sensibles
+            const sanitizedUser = await strapi.plugins['users-permissions'].services.user.sanitizeUser(populatedUser);
+
+            strapi.log.info('Authentification Facebook réussie pour:', email);
+
+            // Renvoyer le JWT et les informations utilisateur
+            return ctx.send({ jwt, user: sanitizedUser });
         } catch (error) {
             strapi.log.error('Erreur authentification Facebook:', error);
-            return ctx.internalServerError('Une erreur est survenue');
+            return ctx.internalServerError('Une erreur est survenue lors de l\'authentification');
         }
     }
 });

@@ -1,4 +1,4 @@
-// src/api/projet/routes/01-custom-routes.ts
+// src/api/projet/routes/01-custom-routes.js
 export default {
     routes: [
         {
