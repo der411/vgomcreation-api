@@ -1,4 +1,4 @@
-// Fichier: src/api/facebook/controllers/facebook.js
+// Pour la suppression des données
 'use strict';
 
 module.exports = {

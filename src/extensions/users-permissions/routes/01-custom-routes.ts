@@ -1,4 +1,3 @@
-// extensions/users-permissions/routes/routes.js
 'use strict';
 
 /**
@@ -31,13 +30,11 @@ module.exports = {
         {
             method: 'POST',
             path: '/auth/facebook-login',
-            handler: 'custom-auth.facebookLogin',
+            handler: 'facebook.login',
             config: {
-                auth: false
+                prefix: '',
+                auth: false,
             }
-        },
-
-        // Route pour Facebook (automatiquement gérée par le plugin user-permissions)
-        // Le controller auth.js étend la route existante, donc pas besoin de la redéfinir ici
+        }
     ]
 };

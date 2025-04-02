@@ -1,3 +1,4 @@
+// Pour la suppression des données
 'use strict';
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
             path: '/facebook/data-deletion',
             handler: 'facebook.dataDeleteRequest',
             config: {
-                auth: false, // Pas besoin d'authentification pour cette route
+                auth: false,
             }
         }
     ]
